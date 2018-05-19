@@ -1,0 +1,1 @@
+export const nBins = 20;

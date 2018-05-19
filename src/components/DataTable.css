@@ -1,0 +1,11 @@
+.ant-table {
+    font-size: 12px !important;
+    font-family: "Lucida Console", Monaco, monospace;
+}
+
+.table-header {
+    /* display: block; */
+    /* white-space: normal; */
+    /* width: 100%; */
+    word-break: normal !important;
+}

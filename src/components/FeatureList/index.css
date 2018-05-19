@@ -1,0 +1,12 @@
+.feature-rect {
+    fill: #ddd;
+    stroke: #999;
+    stroke-width: 0px;
+}
+
+.feature-rect-active {
+    fill: #ddd;
+    stroke: #000;
+    stroke-width: 2px;
+    stroke-opacity: 0.5;
+}

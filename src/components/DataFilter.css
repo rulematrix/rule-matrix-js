@@ -1,0 +1,21 @@
+.scrolling-wrapper {
+  /* display: flex; */
+  /* flex-wrap: nowrap; */
+  overflow-y: auto;
+  height: 640px;
+  /* width: 80%; */
+}
+
+.scrolling-wrapper>.div {
+  height: 75%;
+}
+
+.scrolling-wrapper .card {
+  flex: 0 auto;
+  /* flex-wrap: nowrap; */
+  width: 85%;
+}
+
+.ant-slider-mark {
+  font-size: 11px !important;
+}

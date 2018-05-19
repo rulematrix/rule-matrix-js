@@ -1,0 +1,23 @@
+.hp-brush {
+    fill-opacity: 0.3;
+    stroke-opacity: 0.5;
+    stroke: #222;
+    stroke-width: 0.5;
+    fill: #888;
+}
+
+.hp-brush:hover {
+    fill-opacity: 0.6;
+}
+
+/* .hp-hists rect {
+    fill-opacity: 0.4;
+} */
+
+rect.hp-hist-active {
+    fill-opacity: 0.8;
+}
+
+/* .hp-hists>rect {
+    fill-opacity: 0.8;
+} */
