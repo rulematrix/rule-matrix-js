@@ -16,7 +16,7 @@ import * as d3ScaleChromatic from 'd3-scale-chromatic';
 
 export interface Painter<DataType, ParamsType> {
   update(params: ParamsType): this;
-  data(newData: DataType): this;
+  // data(newData: DataType): this;
   render<GElement extends d3.BaseType>(selector: d3.Selection<SVGElement, DataType, GElement, any>): this;
 }
 

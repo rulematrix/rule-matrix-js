@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as d3 from 'd3';
 
-import { RuleList, DataSet, Streams, ConditionalStreams } from '../../models';
+import { RuleList, Streams, ConditionalStreams } from '../../models';
 // import * as nt from '../../service/num';
 
 import './index.css';
@@ -26,9 +26,8 @@ interface RuleMatrixPropsOptional {
 export interface RuleMatrixProps extends Partial<RuleMatrixPropsOptional> {
   model: RuleList;
   support: number[][] | number[][][];
-  dataset?: DataSet;
   streams?: Streams | ConditionalStreams;
-  input: number[] | null;
+  input?: number[] | null;
 }
 
 export interface RuleMatrixState {
@@ -61,15 +60,6 @@ export default class RuleMatrix extends React.PureComponent<RuleMatrixProps, Rul
     this.state = {painter};
   }
 
-  // componentWillReceiveProps(nextProps: RuleMatrixProps) {
-  //   const model = nextProps.model;
-  //   const newSupport = model.getSupportOrSupportMat();
-    // console.log('update matrix?'); // tslint:disable-line
-    // if (newSupport !== this.state.support) {
-    //   this.setState({support: newSupport});
-    // }
-  // }
-
   componentDidUpdate() {
     // this.stateUpdated = false;
     this.painterUpdate();
@@ -81,11 +71,11 @@ export default class RuleMatrix extends React.PureComponent<RuleMatrixProps, Rul
   }
 
   painterUpdate() {
-    const {dataset, streams, model, rectWidth, rectHeight, flowWidth, minSupport, support, x0, y0, input, color} 
+    const {streams, model, rectWidth, rectHeight, flowWidth, minSupport, support, x0, y0, input, color} 
       = this.props;
     console.log('updating matrix'); // tslint:disable-line
     this.state.painter.update({
-      dataset,
+      // dataset,
       streams, 
       support,
       x0, y0,

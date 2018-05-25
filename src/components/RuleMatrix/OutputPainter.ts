@@ -376,6 +376,8 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
     const { duration } = this.params;
     const rules = this.rules;
     this.useMat = rules.length > 0 && isMat(rules[0].support);
+    // console.log('useMat', rules[0].support); // tslint:disable-line
+    console.log('useMat', this.useMat); // tslint:disable-line
 
     const collapseYs = new Map<string, number>();
     rules.forEach((r) => isRuleGroup(r) && r.rules.forEach((_r) => collapseYs.set(`o-${_r.idx}`, r.y)));

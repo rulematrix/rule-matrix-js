@@ -1,14 +1,10 @@
 // export function max
 
 import {
-  isTreeModel,
   isRuleModel,
   ModelBase,
   Rule,
   Condition,
-  TreeNode,
-  isInternalNode,
-  traverseTree
 } from '../models';
 
 import * as d3 from 'd3';
@@ -22,12 +18,6 @@ export function countFeatureFreq(model: ModelBase, nFeatures: number): (number |
       rule.conditions.forEach((c: Condition) => {
         counts[c.feature]++;
       });
-    });
-  } else if (isTreeModel(model)) {
-    traverseTree(model.root, (node: TreeNode) => {
-      if (isInternalNode(node)) {
-        counts[node.feature]++;
-      }
     });
   }
 

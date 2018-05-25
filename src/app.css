@@ -1,0 +1,66 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+/* .App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-intro {
+  font-size: large;
+} */
+
+/* @keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+} */
+
+.App {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.logo {
+  width: 180px;
+  height: 30px;
+  /* background: rgba(255,255,255,.2);   */
+  margin: 16px 28px 16px 0;
+  /* text-align:  */
+  line-height: 30px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-size: 20px;
+  padding-left: 10px;
+  color: #eee;
+  float: left;
+}
+
+.header-buttons {
+  margin-top: 16px;
+}
+
+.ant-layout-header,
+.ant-layout-footer {
+  background: #003a63;
+  color: #fff;
+}
+.ant-layout-footer {
+  line-height: 1.5;
+}
+.ant-layout-sider {
+  background: #fff;
+  color: #444;
+  line-height: 120px;
+}

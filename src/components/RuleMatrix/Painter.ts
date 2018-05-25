@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { ColorType, Painter, labelColor, defaultDuration } from '../Painters';
 import * as nt from '../../service/num';
-import { Rule, Streams, DataSet, isRuleGroup, RuleList, BaseModel, groupRules, rankRuleFeatures } from '../../models';
+import { Rule, Streams, isRuleGroup, RuleList, groupRules, rankRuleFeatures } from '../../models';
 import RowPainter from './RowPainter';
 import { RuleX, ConditionX, Feature } from './models';
 import { ConditionalStreams, isConditionalStreams, groupBySupport } from '../../models';
@@ -32,7 +32,7 @@ function computeExistingFeatures(rules: Rule[], nFeatures: number) {
   return {features, featureCounts};
 }
 
-function initRuleXs(rules: Rule[], model: BaseModel): RuleX[] {
+function initRuleXs(rules: Rule[], model: RuleList): RuleX[] {
   return rules.map((r, i) => {
     const {conditions, ...rest} = r;
     let conditionXs: ConditionX[] = [];
@@ -76,22 +76,22 @@ interface OptionalParams {
   elemHeight: number;
   color: ColorType;
   expandFactor: [number, number];
+  zoomable: Boolean;
+  tooltip: Boolean;
 }
 
 export interface RuleMatrixParams extends Partial<OptionalParams> {
   model: RuleList;
   support: number[][] | number[][][];
-  dataset?: DataSet;
+  // dataset?: DataSet;
   streams?: Streams | ConditionalStreams;
-  input: number[] | null;
+  input?: number[] | null;
   // supports: number[][]
   // outputs?: number[];
 }
 
 export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> {
   public static defaultParams: OptionalParams = {
-    // width: 200,
-    // height: 50,
     minSupport: 0.0,
     color: labelColor,
     elemWidth: 30,
@@ -105,13 +105,11 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
     paddingX: 0.1,
     paddingY: 0.2,
     paddingLeft: 0.5,
-    // buttonSize: 12,
     outputWidth: 200,
-    // transform: '',
     expandFactor: [3, 2],
     flowWidth: 50,
-    // onClick: () => null
-    // interval: 20,
+    zoomable: false,
+    tooltip: true
   };
   private selector: d3.Selection<SVGGElement, any, any, any>;
   private params: RuleMatrixParams & OptionalParams;
@@ -157,10 +155,6 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
     return this;
   }
 
-  public data(model: RuleList) {
-    return this;
-  }
-
   public collapseAll() {
     if (this.expandedElements.size) {
       this.expandedElements.clear();
@@ -172,7 +166,7 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
     const rules = this.rules;
     const rule = rules[r];
     if (isRuleGroup(rule)) {
-      console.log(`Expand rule group ${r}`); // tslint:disable-line
+      // console.log(`Expand rule group ${r}`); // tslint:disable-line
       const nested = initRuleXs(rule.rules, this.model);
       nested[0].expanded = true;
       this.rules = [...rules.slice(0, r), ...nested, ...rules.slice(r + 1)];
@@ -183,7 +177,7 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
         nested.push(rules[i]);
         i++;
       }
-      console.log(`Collapse rules [${r}, ${i})`); // tslint:disable-line
+      // console.log(`Collapse rules [${r}, ${i})`); // tslint:disable-line
       const grouped = initRuleXs([groupRules(nested)], this.model);
       this.rules = [...rules.slice(0, r), ...grouped, ...rules.slice(i)];
     }
@@ -193,7 +187,7 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
 
   public clickCondition(r: number, f: number): void {
     const key = `${r},${f}`;
-    console.log(`clicked ${key}`); // tslint:disable-line
+    // console.log(`clicked ${key}`); // tslint:disable-line
     if (this.expandedElements.has(key)) {
       this.expandedElements.delete(key);
     } else {
@@ -324,17 +318,6 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
     const {x0, y0} = this.params;
     this.selector = selector;
     this.updateRules().updatePresentation().updatePos();
-    // console.log(this.rules); // tslint:disable-line
-    // this.onClick = (r: number, f: number) => {
-    //   const key = `${r}-${f}`;
-    //   console.log(`clicked ${key}`); // tslint:disable-line
-    //   if (this.expandedElements.has(key)) {
-    //     this.expandedElements.delete(key);
-    //   } else {
-    //     this.expandedElements.add(key);
-    //   }
-    //   this.render(selector);
-    // };
 
     // Global Transform
     selector.attr('transform', `translate(${x0}, ${y0})`);
@@ -488,7 +471,7 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
       x: xs[i],
       width: widths[i],
       count: featureCounts[f],
-      cutPoints: model.meta.discretizers[f].cutPoints,
+      cutPoints: model.discretizers[f].cutPoints,
       range: model.meta.ranges[f],
       categories: model.meta.categories[f],
       expanded: expandedFeatures.has(f),
@@ -577,6 +560,8 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
     root: d3.Selection<SVGGElement, any, any, any>,
     container: d3.Selection<SVGGElement, any, any, any>
   ): this {
+    if (!this.params.zoomable)
+      return this;
     // const {x0, y0} = this.params;
     const rootNode = container.node();
     const zoomed = function () {
