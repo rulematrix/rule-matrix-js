@@ -119,7 +119,7 @@ export class ConditionPainter implements Painter<ConditionX, ConditionPainterPar
   }
 }
 
-interface OptionalParams {
+export interface OptionalParams {
   labelColor: ColorType;
   duration: number;
   buttonSize: number;

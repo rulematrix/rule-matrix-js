@@ -26,7 +26,7 @@ export interface AppProps {
   input?: number[] | null;
   styles?: RuleStyles;
 }
-interface AppState {
+export interface AppState {
 
 }
 

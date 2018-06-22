@@ -8,7 +8,7 @@ import './index.css';
 import { labelColor as defaultLabelColor, ColorType } from '../Painters/Painter';
 import RuleMatrixPainter from './Painter';
 
-interface RuleMatrixPropsOptional {
+export interface RuleMatrixPropsOptional {
   transform: string;
   rectWidth: number;
   rectHeight: number;

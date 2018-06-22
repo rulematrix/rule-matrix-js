@@ -23,7 +23,7 @@ const flowCurve = (d?: {s: Point, t: Point}): string => {
 
 // function drawRects()
 
-interface FlowOptional {
+export interface FlowOptional {
   width: number;
   dx: number;
   dy: number;
@@ -34,7 +34,7 @@ interface FlowOptional {
   divideHeight: number;
 }
 
-interface FlowPainterParams extends Partial<FlowOptional> {}
+export interface FlowPainterParams extends Partial<FlowOptional> {}
 
 type Rect = {x: number, width: number, height: number};
 
@@ -42,7 +42,7 @@ type Path = {s: Point, t: Point, width: number};
 
 // type FlowData = { width: number; shift: number; height: number; y: number };
 
-type Flow = {support: number[], y: number};
+export type Flow = {support: number[], y: number};
 
 export default class FlowPainter implements Painter<Flow[], FlowPainterParams> {
   public static defaultParams: FlowOptional = {

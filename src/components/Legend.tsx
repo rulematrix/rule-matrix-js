@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import { ColorType, labelColor } from './Painters';
 import './Legend.css';
 
-interface OptionalProps {
+export interface OptionalProps {
   labelSize: number;
   fontSize: number;
   color: ColorType;

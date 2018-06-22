@@ -6,7 +6,7 @@ import './index.css';
 type Point = [number, number];
 type Line = Point[];
 
-interface OptionalParams {
+export interface OptionalParams {
   width: number;
   height: number;
   color: ColorType;

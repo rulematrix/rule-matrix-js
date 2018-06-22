@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "outDir": "build/dist",
+    "outDir": "./dist",
     "module": "esnext",
     "target": "es5",
+    "declaration": true,
     "downlevelIteration": true,
     "importHelpers": true,
     "lib": ["es2015", "dom"],
     "sourceMap": true,
-    "allowJs": true,
+    // "allowJs": true,
     "jsx": "react",
     "moduleResolution": "node",
     "rootDir": "src",
@@ -33,7 +34,8 @@
     "acceptance-tests",
     "webpack",
     "jest",
-    "src/setupTests.ts"
+    "src/setupTests.ts",
+    "config"
   ]
   // "include": ["./typings/**/*"],
   // "files": [

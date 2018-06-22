@@ -4,7 +4,7 @@ import * as nt from '../../service/num';
 
 import './HistPainter.css';
 
-type Hist = nt.Vector;
+export type Hist = nt.Vector;
 
 function checkBins(hists: Hist[]) {
   let nBins = hists[0].length;
@@ -68,7 +68,7 @@ function computeLayout(hists: Hist[], params: HistParams & OptionalParams): Layo
   return {xs, step, xScaler, yScaler, bandWidth, interval: [r0, r1]};
 }
 
-interface OptionalParams {
+export interface OptionalParams {
   color: ColorType;
   duration: number;
   mode: 'overlay' | 'stack';

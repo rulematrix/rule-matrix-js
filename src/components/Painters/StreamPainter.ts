@@ -4,13 +4,13 @@ import * as nt from '../../service/num';
 
 import './HistPainter.css';
 
-type Section = number[] | Int32Array;
+export type Section = number[] | Int32Array;
 
 // function brush(range: [number, number], bars: d3.Selection<SVGRectElement, any, any, any>, pack: number = 1) {
 //   bars.classed('hp-hist-active', (d, i) => range[0] <= (i * pack) && (i * pack) < range[1]);
 // }
 
-interface OptionalParams {
+export interface OptionalParams {
   color: ColorType;
   duration: number;
   // mode: 'overlay' | 'stack';

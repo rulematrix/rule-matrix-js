@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import { Painter, defaultDuration } from '../Painters';
 import { Feature } from './models';
 
-interface OptionalParams {
+export interface OptionalParams {
   duration: number;
   rotate: number;
   headerSize: number;

@@ -55,17 +55,17 @@ function arcTween(startAngle: number, newAngle: number, arc: d3.Arc<any, any>): 
   // };
 }
 
-interface OptionalSupportParams {
+export interface OptionalSupportParams {
   duration: number;
   color: ColorType;
 }
 
-interface SupportParams extends Partial<OptionalSupportParams> {
+export interface SupportParams extends Partial<OptionalSupportParams> {
   widthFactor: number;
   height: number;
 }
 
-type SupportData = number[] | number[][];
+export type SupportData = number[] | number[][];
 
 function isMat(a: number[] | number[][]): a is number[][] {
   return Array.isArray(a[0]);
@@ -332,7 +332,7 @@ export class SupportPainter implements Painter<SupportData, SupportParams> {
   }
 }
 
-interface OptionalParams {
+export interface OptionalParams {
   color: ColorType;
   duration: number;
   fontSize: number;

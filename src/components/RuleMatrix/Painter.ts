@@ -57,7 +57,7 @@ function initRuleXs(rules: Rule[], model: RuleList): RuleX[] {
   });
 }
 
-interface OptionalParams {
+export interface OptionalParams {
   outputWidth: number;
   // height: number;
   duration: number;
