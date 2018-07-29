@@ -336,6 +336,8 @@ export interface OptionalParams {
   color: ColorType;
   duration: number;
   fontSize: number;
+  displayFidelity: boolean;
+  displayEvidence: boolean;
   widthFactor: number;
 }
 
@@ -351,6 +353,8 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
     duration: defaultDuration,
     fontSize: 14,
     widthFactor: 200,
+    displayEvidence: true,
+    displayFidelity: true,
     // expandFactor: [4, 3],
   };
   private rules: RuleX[];
@@ -412,7 +416,7 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
   public renderHeader(root: d3.Selection<SVGGElement, any, d3.BaseType, any>): this {
     // make sure the group exists
     // console.log('here'); // tslint:disable-line
-    const {duration} = this.params;
+    const {duration, displayEvidence, displayFidelity} = this.params;
     const rules = this.rules;
 
     // const confidence = nt.sum(rules.map((r) => r.totalSupport * r.output[r.label])) / totalSupport;
@@ -439,6 +443,14 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
       headerXs = [15, 75, 125];
       rectWidths = [80, 110, 135];
       fillRatios = [0, fidelity, acc];
+    }
+    if (!displayEvidence && headerTexts.length === 3) {
+      headerTexts = headerTexts.slice(0, 2);
+      if (!displayFidelity) {
+        headerTexts = headerTexts.slice(0, 1);
+      }
+    } else if (!displayFidelity) {
+      headerTexts = headerTexts.slice(0, 1);
     }
 
     const headers = root.select('g.mo-headers');
@@ -552,7 +564,11 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
     update: d3.Selection<SVGGElement, RuleX, SVGGElement, RuleX[]>,
     updateTransition: d3.Transition<SVGGElement, RuleX, SVGGElement, RuleX[]>
   ): this {
-    const {duration} = this.params;
+    const {duration, displayFidelity} = this.params;
+    if (!displayFidelity) {
+      update.select<SVGGElement>('g.mo-fidelity').attr('display', 'none');
+      return this;
+    }
     const fontSize = 13;
     const innerRadius = fontSize * 0.9;
     // const outputWidth = fontSize * 2;
@@ -616,7 +632,11 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
     enter: d3.Selection<SVGGElement, RuleX, SVGGElement, RuleX[]>,
     update: d3.Selection<SVGGElement, RuleX, SVGGElement, RuleX[]>
   ): this {
-    const { duration, fontSize, widthFactor, color, elemHeight } = this.params;
+    const { duration, fontSize, widthFactor, color, elemHeight, displayEvidence } = this.params;
+    if (!displayEvidence) {
+      update.select<SVGGElement>('g.mo-supports').attr('display', 'none');
+      return this;
+    }
     const useMat = this.useMat;
     // Enter
     enter.append('g').attr('class', 'mo-supports');

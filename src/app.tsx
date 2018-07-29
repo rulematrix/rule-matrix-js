@@ -8,15 +8,19 @@ import { RuleList } from './models/ruleModel';
 import { Streams, Support, SupportMat, createStreams } from './models/data';
 
 // import * as fs from 'fs';
-import RuleMatrixApp from './RuleMatrixApp';
+import RuleMatrixApp, { RuleMatrixStyles } from './RuleMatrixApp';
 
 const input = null;
-const styles = {
-  flowWidth: 50,
+const styles: RuleMatrixStyles = {
+  flowWidth: 30,
   // mode: 'matrix',
   rectWidth: 45,
   rectHeight: 27,
   color: labelColor,
+  displayEvidence: true,
+  // displayFidelity: false,
+  // displayFlow: false,
+  zoomable: true,
 };
 const model: RuleList = new RuleList(require('./test_data/model.json'));
 const streams: Streams = createStreams(require('./test_data/stream.json'));

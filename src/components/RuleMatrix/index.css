@@ -134,7 +134,7 @@ path.mo-fidelity {
 g.matrix-rule:hover>rect.matrix-bg {
   stroke: #444;
   fill: #d8d8d8;
-  stroke-width: 0.5px;
+  stroke-width: 1px;
 }
 
 
@@ -142,10 +142,12 @@ g.matrix-rule:hover>rect.matrix-bg {
   fill: #fff;
   fill-opacity: 1e-6;
   stroke-width: 0.5px;
-  stroke: #bbb;
+  stroke: #888;
 }
 
 .matrix-bg-active {
+  fill: #fff;
+  fill-opacity: 1e-6;
   stroke-width: 1px;
   stroke: #666;
 }
@@ -153,5 +155,5 @@ g.matrix-rule:hover>rect.matrix-bg {
 .matrix-bg-highlight {
   /* fill: #ddd; */
   stroke-width: 1.5px;
-  stroke: #666;
+  stroke: #444;
 }

@@ -10,13 +10,18 @@ import RuleMatrixPainter from './Painter';
 
 export interface RuleMatrixPropsOptional {
   transform: string;
+  flowWidth: number;
+  evidenceWidth: number;
   rectWidth: number;
   rectHeight: number;
+  displayFlow: boolean;
+  // displayFidelity: boolean;
+  displayEvidence: boolean;
+  zoomable: boolean;
+  color: ColorType;
   minSupport: number;
   intervalY: number;
   intervalX: number;
-  flowWidth: number;
-  color: ColorType;
   width: number;
   height: number;
   x0: number;
@@ -37,16 +42,21 @@ export interface RuleMatrixState {
 export default class RuleMatrix extends React.PureComponent<RuleMatrixProps, RuleMatrixState> {
   public static defaultProps: Partial<RuleMatrixProps> & RuleMatrixPropsOptional = {
     transform: '',
+    flowWidth: 40,
+    evidenceWidth: 150,
     rectWidth: 30,
     rectHeight: 30,
-    minSupport: 0.01,
+    displayFlow: true,
+    // displayFidelity: true,
+    displayEvidence: true,
+    zoomable: true,
+    color: defaultLabelColor,
+    minSupport: 0.02,
     intervalY: 10,
     intervalX: 0.2,
-    flowWidth: 60,
-    color: defaultLabelColor,
-    width: 1200,
+    width: 960,
     height: 800,
-    x0: 100,
+    x0: 20,
     y0: 160,
   };
   // private stateUpdated: boolean;
@@ -71,8 +81,9 @@ export default class RuleMatrix extends React.PureComponent<RuleMatrixProps, Rul
   }
 
   painterUpdate() {
-    const {streams, model, rectWidth, rectHeight, flowWidth, minSupport, support, x0, y0, input, color} 
+    const {streams, model, x0, y0, rectWidth, rectHeight, flowWidth, evidenceWidth} 
       = this.props;
+    const {minSupport, support, input, color, displayFlow, displayEvidence, zoomable} = this.props;
     console.log('updating matrix'); // tslint:disable-line
     this.state.painter.update({
       // dataset,
@@ -84,17 +95,29 @@ export default class RuleMatrix extends React.PureComponent<RuleMatrixProps, Rul
       // transform: `translate(100, 160)`,
       elemWidth: rectWidth,
       elemHeight: rectHeight,
-      flowWidth,
+      evidenceWidth,
+      flowWidth: displayFlow ? flowWidth : 0,
+      displayFlow,
+      displayEvidence,
+      // displayFidelity,
       model,
       minSupport,
+      zoomable,
     })
       .render(d3.select<SVGGElement, {}>(this.ref));
   }
   render() {
-    // const {width, height, x0, y0} = this.props as RuleMatrixProps & RuleMatrixPropsOptional;
+    const {width, height, x0, y0} = this.props;
     return(
       <g ref={(ref) => ref && (this.ref = ref)} className="rule-matrix">
-        {/* <rect stroke="#888" x={-x0} y={-y0} width={width} height={height} fill="none"/> */}
+        <rect 
+          className="bg" 
+          width={width} 
+          height={height} 
+          fill="white" 
+          fillOpacity={1e-6} 
+          transform={`translate(${-(x0 || 0)}, ${-(y0 || 0)})`}
+        />
       </g>
     );
   }

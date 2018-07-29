@@ -58,7 +58,7 @@ function initRuleXs(rules: Rule[], model: RuleList): RuleX[] {
 }
 
 export interface OptionalParams {
-  outputWidth: number;
+  evidenceWidth: number;
   // height: number;
   duration: number;
   fontSize: number;
@@ -76,6 +76,9 @@ export interface OptionalParams {
   elemHeight: number;
   color: ColorType;
   expandFactor: [number, number];
+  displayFlow: boolean;
+  displayFidelity: boolean;
+  displayEvidence: boolean;
   zoomable: Boolean;
   tooltip: Boolean;
 }
@@ -92,11 +95,11 @@ export interface RuleMatrixParams extends Partial<OptionalParams> {
 
 export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> {
   public static defaultParams: OptionalParams = {
-    minSupport: 0.0,
+    minSupport: 0.01,
     color: labelColor,
     elemWidth: 30,
     elemHeight: 30,
-    x0: 100,
+    x0: 20,
     y0: 160,
     duration: defaultDuration,
     fontSize: 12,
@@ -105,9 +108,12 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
     paddingX: 0.1,
     paddingY: 0.2,
     paddingLeft: 0.5,
-    outputWidth: 200,
+    evidenceWidth: 150,
     expandFactor: [3, 2],
     flowWidth: 50,
+    displayFlow: true,
+    displayFidelity: true,
+    displayEvidence: true,
     zoomable: false,
     tooltip: true
   };
@@ -321,18 +327,13 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
 
     // Global Transform
     selector.attr('transform', `translate(${x0}, ${y0})`);
-    selector.selectAll('rect.bg').data(['rect-bg']).enter()
-      .append('rect').attr('class', 'bg');
+    // selector.selectAll('rect.bg').data(['rect-bg']).enter()
+    //   .append('rect').attr('class', 'bg');
     
     // Root Container
     selector.selectAll('g.container').data(['container']).enter()
       .append('g').attr('class', 'container');
     const container = selector.select<SVGGElement>('g.container');
-
-    // Button
-    selector.selectAll('g.buttons').data(['buttons']).enter()
-      .append('g').attr('class', 'buttons');
-    const buttons = selector.select<SVGGElement>('g.buttons');
 
     // Rule Root
     container.selectAll('g.rules').data(['rules']).enter()
@@ -358,20 +359,27 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
     container.selectAll('g.cursor-follow').data(['cursor-follow']).enter()
       .append('g').attr('class', 'cursor-follow');
     const cursorFollow = container.select<SVGGElement>('g.cursor-follow');
-
+   
+    // Render cursorFollow first, because the we need to register tooltip to rowPainter
     this.renderCursorFollow(container, cursorFollow);
     this.renderRows(ruleRoot);
     this.renderFlows(flowRoot);
     this.renderHeader(headerRoot);
     this.renderOutputs(outputRoot);
+
+    // Button
+    selector.selectAll('g.buttons').data(['buttons']).enter()
+      .append('g').attr('class', 'buttons');
+    const buttons = selector.select<SVGGElement>('g.buttons');
     this.renderButton(buttons);
+
     this.registerZoom(selector, container);
 
-    selector.select('rect.bg')
-      .attr('width', this.getWidth() + 400)
-      .attr('height', this.getHeight() + 400)
-      .attr('fill', 'white')
-      .attr('fill-opacity', 1e-6);
+    // selector.select('rect.bg')
+    //   .attr('width', this.getWidth() + 400)
+    //   .attr('height', this.getHeight() + 400)
+    //   .attr('fill', 'white')
+    //   .attr('fill-opacity', 1e-6);
 
     return this;
   }
@@ -386,7 +394,7 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
     rules.forEach((r) => isRuleGroup(r) && r.rules.forEach((_r) => collapseYs.set(`r-${_r.idx}`, r.y)));
 
     // const flatRules = flattenRules(rules);
-    root.attr('transform', `translate(${flowWidth},0)`);
+    root.attr('transform', `translate(${flowWidth * 2 + 10},0)`);
     // Joined
     const rule = root
       .selectAll<SVGGElement, {}>('g.matrix-rule')
@@ -433,30 +441,34 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
   }
 
   public renderOutputs(root: d3.Selection<SVGGElement, any, SVGElement, any>): this {
-    const { outputWidth, duration, color, flowWidth, elemHeight } = this.params;
-    const widthFactor = outputWidth / this.model.maxSupport;
+    const { evidenceWidth, duration, color, flowWidth, elemHeight, displayEvidence, displayFidelity } = this.params;
+    const widthFactor = evidenceWidth / this.model.maxSupport;
     const width = this.getWidth();
     root.transition().duration(duration)
-      .attr('transform', `translate(${width + flowWidth},0)`);
+      .attr('transform', `translate(${width + flowWidth * 2 + 10},0)`);
 
-    this.outputPainter.update({widthFactor, duration, color, elemHeight})
+    this.outputPainter.update({widthFactor, duration, color, elemHeight, displayEvidence, displayFidelity})
       .data(this.rules).render(root);
     return this;
   }
 
   public renderFlows(root: d3.Selection<SVGGElement, any, any, any>): this {
-    const {elemWidth, flowWidth, color} = this.params;
+    const {flowWidth, color, displayFlow} = this.params;
+    if (!displayFlow) {
+      root.remove();
+      return this;
+    }
     const { rules } = this;
-    const dx = Math.max(50, elemWidth + 10);
+    const dx = flowWidth + 10; // Math.max(50, flowWidth + 10);
 
     // transform root
-    root.attr('transform', `translate(${- dx},0)`);
+    // root.attr('transform', `translate(${- dx},0)`);
     
     const flows = rules.map(({_support, y, height}) => ({
-      support: _support, y: y + height / 2
-    }));
+        support: _support, y: y + height / 2
+      }));
 
-    this.flowPainter.update({dx, dy: elemWidth, width: flowWidth, color})
+    this.flowPainter.update({dx, dy: flowWidth, width: flowWidth, color})
       .data(flows).render(root);
     return this;
   }
@@ -465,7 +477,7 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
     const {duration, headerSize, headerRotate, flowWidth} = this.params;
     const {xs, widths, features, expandedFeatures, featureCounts, model} = this;
 
-    root.attr('transform', `translate(${flowWidth},0)`);
+    root.attr('transform', `translate(${flowWidth * 2 + 10},0)`);
     const featureData: Feature[] = features.map((f: number, i: number) => ({
       text: model.meta.featureNames[f],
       x: xs[i],
@@ -509,6 +521,7 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
       })
       .on('mouseover', () => cursorFollow.attr('display', null))
       .on('mouseout', () => cursorFollow.attr('display', 'none'));
+    this.rowPainter.update({tooltip});
     return this;
   }
   
@@ -523,7 +536,6 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
     tooltipEnter.append('text').attr('class', 'tooltip')
       .attr('text-anchor', 'start').attr('dx', 5).attr('dy', -2);
     const tooltip = cursorFollow.select<SVGGElement>('g.tooltip');
-    this.rowPainter.update({tooltip});
     return tooltip;
   }
 
@@ -539,7 +551,7 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
   }
 
   private renderButton(buttonGroup: d3.Selection<SVGGElement, any, any, any>): this {
-    buttonGroup.attr('transform', `translate(-100,-150)`);
+    buttonGroup.attr('transform', `translate(0,-150)`);
     const g = buttonGroup.selectAll('g.reset-button').data(['g']).enter()
       .append('g').attr('class', 'reset-button')
       .on('click', this.collapseAll);
@@ -560,8 +572,11 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
     root: d3.Selection<SVGGElement, any, any, any>,
     container: d3.Selection<SVGGElement, any, any, any>
   ): this {
-    if (!this.params.zoomable)
+    const {zoomable} = this.params;
+    if (!zoomable) {
+      root.on('zoom', null);
       return this;
+    }
     // const {x0, y0} = this.params;
     const rootNode = container.node();
     const zoomed = function () {

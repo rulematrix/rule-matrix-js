@@ -68,7 +68,7 @@ export default class FlowPainter implements Painter<Flow[], FlowPainterParams> {
   }
   public data(flows: Flow[]) {
     this.flows = flows;
-    const nClasses = flows[0].support.length;
+    const nClasses = flows.length > 0 ? flows[0].support.length : 0;
     this.flowSums = flows.map((r: Flow) => nt.sum(r.support));
 
     let reserves: number[][] = 
