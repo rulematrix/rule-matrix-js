@@ -10,6 +10,7 @@ import { ConditionalStreams, Streams, Support, SupportMat } from './models/data'
 // import * as fs from 'fs';
 import { Patterns } from './components/patterns';
 import { RuleMatrixPropsOptional } from './components/RuleMatrix/index';
+import Legend from './components/Legend';
 
 // export interface RuleStyles {
 //   flowWidth: number;
@@ -57,8 +58,11 @@ export default class RuleMatrixApp extends React.Component<AppProps, AppState> {
       // <div className="App">
       <svg id="main" height={height} width={width}>
         <Patterns/>
+        {model &&
+          <Legend labels={model.meta.labelNames} color={styles && styles.color} transform={`translate(150, 10)`}/>
+        }
         {
-          model && streams && support &&
+          model && streams && support && 
           <RuleMatrix 
             model={model} 
             streams={streams} 
