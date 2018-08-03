@@ -20,11 +20,6 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
     // "typeRoots" : ["./node_modules/@types", "./typings"]
-    "paths": {
-      "*": [
-        "./typings/*"
-      ]
-    },
     "baseUrl": "."
   },
   "exclude": [
