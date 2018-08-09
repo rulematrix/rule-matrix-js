@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "module": "esnext",
+    "module": "es2015",
     "target": "es5",
     "declaration": true,
     "downlevelIteration": true,
@@ -20,11 +20,6 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
     // "typeRoots" : ["./node_modules/@types", "./typings"]
-    "paths": {
-      "*": [
-        "./typings/*"
-      ]
-    },
     "baseUrl": "."
   },
   "exclude": [
