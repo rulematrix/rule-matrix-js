@@ -73,13 +73,13 @@ rect.mo-support-mat {
 .visible {
   visibility: visible;
   opacity: 1;
-  transition: opacity 0.5s linear;
+  transition: opacity 0.4s linear;
 }
 
 .hidden {
   visibility: hidden;
   opacity: 0;
-  transition: visibility 0s 0.5s, opacity 0.5s linear;
+  transition: visibility 0s 0.4s, opacity 0.4s linear;
 }
 
 g.row-button {

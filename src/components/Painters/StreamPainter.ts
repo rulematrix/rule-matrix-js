@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { Painter, ColorType, defaultColor, defaultDuration } from './index';
-import * as nt from '../../service/num';
+// import * as nt from '../../service/num';
 
 import './HistPainter.css';
 
@@ -68,12 +68,12 @@ export default class StreamPainter implements Painter<Section[], StreamParams> {
     const yMin = d3.min(stackedStream, (stream) => d3.min(stream, (d) => d[0])) || 0;
     const yMax = d3.max(stackedStream, (stream) => d3.max(stream, (d) => d[1])) || 0;
     const diff = Math.max(0, (this.params.yMax || 0) - (yMax - yMin));
-    if (streamData.length) {
-      console.log(yMax); // tslint:disable-line
-      console.log(yMin); // tslint:disable-line
-      console.log(diff);  // tslint:disable-line
-      console.log(streamData.map(s => nt.sum(s))); // tslint:disable-line
-    }
+    // if (streamData.length) {
+    //   console.log(yMax); // tslint:disable-line
+    //   console.log(yMin); // tslint:disable-line
+    //   console.log(diff);  // tslint:disable-line
+    //   console.log(streamData.map(s => nt.sum(s))); // tslint:disable-line
+    // }
 
     const xScaler = d3.scaleLinear()
       .domain(xRange).range([margin.left, width - margin.right]);

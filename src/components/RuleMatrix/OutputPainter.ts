@@ -381,7 +381,7 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
     const rules = this.rules;
     this.useMat = rules.length > 0 && isMat(rules[0].support);
     // console.log('useMat', rules[0].support); // tslint:disable-line
-    console.log('useMat', this.useMat); // tslint:disable-line
+    // console.log('useMat', this.useMat); // tslint:disable-line
 
     const collapseYs = new Map<string, number>();
     rules.forEach((r) => isRuleGroup(r) && r.rules.forEach((_r) => collapseYs.set(`o-${_r.idx}`, r.y)));
@@ -393,7 +393,8 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
     const groupsEnter = groups.enter()
       .append<SVGGElement>('g')
       .attr('class', 'matrix-outputs')
-      .attr('id', d => `o-${d.idx}`);
+      .attr('id', d => `o-${d.idx}`)
+      .attr('transform', d => d.parent ? `translate(10, ${d.y - 40})` : 'translate(10, 0)');
     // Update
     const groupsUpdate = groupsEnter.merge(groups)
       .classed('hidden', false).classed('visible', true);
@@ -409,7 +410,7 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
       .classed('hidden', true).classed('visible', false)
       .transition().duration(duration)
       .attr('transform', (d, i, nodes) => 
-        `translate(5,${collapseYs.get(nodes[i].id)})`);
+        `translate(10,${collapseYs.get(nodes[i].id)})`);
     return this;
   }
 
@@ -493,7 +494,7 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
     return this;
   }
 
-  public renderOutputs(
+public renderOutputs(
     enter: d3.Selection<SVGGElement, RuleX, SVGGElement, RuleX[]>,
     update: d3.Selection<SVGGElement, RuleX, SVGGElement, RuleX[]>,
     updateTransition: d3.Transition<SVGGElement, RuleX, SVGGElement, RuleX[]>

@@ -197,7 +197,7 @@ export default class HistPainter implements Painter<Hist[], HistParams> {
       .enter()
       .append('g')
       .attr('class', 'hp-hists');
-    console.log(color(0), color(1)); // tslint:disable-line
+    // console.log(color(0), color(1)); // tslint:disable-line
     // Merge
     const histGUpdate = histGEnter.merge(histG);
     histGUpdate

@@ -215,6 +215,7 @@ export default class RuleRowPainter implements Painter<RuleX, RuleRowParams> {
     // Add listeners to update tooltip
     if (tooltip) {
       const renderTooltip = (texts: string[]) => {
+        tooltip.attr('display', null);
         // texts
         const tspan = tooltip.select('text').selectAll('tspan').data(texts);
         const tspanUpdate = tspan
@@ -224,16 +225,18 @@ export default class RuleRowPainter implements Painter<RuleX, RuleRowParams> {
         tspan.exit().remove();
         // rect-bg
         const textNode = tooltip.select('text').node() as SVGTextElement | null;
-        const bBox = textNode ? textNode.getBBox() : null;
+        const bBox = textNode ? textNode.getBoundingClientRect() : null;
+        console.log(bBox);  // tslint:disable-line
         const width = bBox ? bBox.width : 50;
         const height = bBox ? bBox.height : 20;
-        const x = bBox ? bBox.x : 0;
-        const y = bBox ? bBox.y : 0;
+        // const x = 4;
+        // const y = 4;
+        // const x = bBox ? bBox.left : 0;
+        // const y = bBox ? bBox.top : 0;
         // const height = textNode ? textNode.clientHeight : 0;
 
         tooltip.select('rect').attr('width', width + 10).attr('height', height * 1.2)
-          .attr('y', y - height * 0.1).attr('x', x - 5);
-        tooltip.attr('display', null);
+          .attr('y', 4 - height * 0.1).attr('x', 3);
       };
       const hideTooltip = () => tooltip.attr('display', 'none');
 

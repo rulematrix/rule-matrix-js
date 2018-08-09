@@ -55,3 +55,8 @@ RuleMatrixApp support the following styling (the `styles` prop) options:
   * `minSupport`: (`number`) The minimum support (in proportion) of a rule (if a rule does not have a enough support, it will be collapsed) default to 0.01;
   * `width`: (`number`) The width of the svg;
   * `height`: (`number`) The height of the svg;
+
+
+## Known Issues
+
+1. Firefox has trouble using getBBox, which results in the error display of tooltip

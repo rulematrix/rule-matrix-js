@@ -5,7 +5,7 @@ import { Rule, Streams, isRuleGroup, RuleList, groupRules, rankRuleFeatures } fr
 import RowPainter from './RowPainter';
 import { RuleX, ConditionX, Feature } from './models';
 import { ConditionalStreams, isConditionalStreams, groupBySupport } from '../../models';
-import FlowPainter from '../Painters/FlowPainter';
+import FlowPainter from './FlowPainter';
 import OutputPainter from './OutputPainter';
 import HeaderPainter from './HeaderPainter';
 
@@ -32,6 +32,9 @@ function computeExistingFeatures(rules: Rule[], nFeatures: number) {
   return {features, featureCounts};
 }
 
+/**
+ * Convert the rules of Rule type to RuleX type (used for presentation only)
+ */
 function initRuleXs(rules: Rule[], model: RuleList): RuleX[] {
   return rules.map((r, i) => {
     const {conditions, ...rest} = r;
@@ -171,12 +174,14 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
   public clickExpand(r: number) {
     const rules = this.rules;
     const rule = rules[r];
+    // Clicking on the button of a group to expand
     if (isRuleGroup(rule)) {
       // console.log(`Expand rule group ${r}`); // tslint:disable-line
       const nested = initRuleXs(rule.rules, this.model);
-      nested[0].expanded = true;
+      nested[0].expanded = true;  // this flag is used for drawing the button
       this.rules = [...rules.slice(0, r), ...nested, ...rules.slice(r + 1)];
     } else {
+    // Clicking on the button to collapse
       let i = r + 1;
       const nested = [rule];
       while (i < rules.length && rules[i].parent === rule.parent) {
@@ -402,11 +407,12 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
 
     // Enter
     const ruleEnter = rule.enter().append<SVGGElement>('g').attr('id', d => `r-${d.idx}`)
-      .attr('class', 'matrix-rule').attr('transform', 'translate(0,0)');
+      .attr('class', 'matrix-rule')
+      .attr('transform', (d: RuleX) => d.parent ? `translate(${d.x},${d.y - 40})` : 'translate(0,0)');
 
     // Update
     const ruleUpdate = ruleEnter.merge(rule)
-      .classed('hidden', false).classed('visible', true).attr('display', null);
+      .attr('display', null).classed('hidden', false).classed('visible', true);
     ruleUpdate
       .transition()
       .duration(duration)
@@ -460,9 +466,6 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
     }
     const { rules } = this;
     const dx = flowWidth + 10; // Math.max(50, flowWidth + 10);
-
-    // transform root
-    // root.attr('transform', `translate(${- dx},0)`);
     
     const flows = rules.map(({_support, y, height}) => ({
         support: _support, y: y + height / 2
@@ -587,8 +590,8 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
     // console.log(width); // tslint:disable-line
     // console.log(height); // tslint:disable-line
     const zoom = d3.zoom()
-      .scaleExtent([0.2, 5])
-      .translateExtent([[-2000, -2000], [3000, 3000]])
+      .scaleExtent([0.5, 2])
+      // .translateExtent([[-2000, -2000], [2000, 2000]])
       .on('zoom', zoomed);
     root.call(zoom);
     return this;

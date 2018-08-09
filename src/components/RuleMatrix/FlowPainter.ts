@@ -1,5 +1,5 @@
 import * as nt from '../../service/num';
-import { ColorType, Painter, labelColor, defaultDuration } from './index';
+import { ColorType, Painter, labelColor, defaultDuration } from '../Painters';
 
 import './FlowPainter.css';
 
@@ -123,7 +123,8 @@ export default class FlowPainter implements Painter<Flow[], FlowPainterParams> {
       .attr('rx', 3).attr('ry', 3);
 
     // UPDATE
-    const reserveUpdate = reserveEnter.merge(reserve);
+    const reserveUpdate = reserveEnter.merge(reserve)
+      .classed('hidden', false).classed('visible', true);
     reserveUpdate.select('title').text((d, i) => reserves[i].join('/'));
     reserveUpdate.select('rect.v-divide')
       .attr('width', (d, i) => reserveSums[i] * multiplier + 4).attr('x', -2)
@@ -134,8 +135,10 @@ export default class FlowPainter implements Painter<Flow[], FlowPainterParams> {
       .attr('transform', (d: Flow, i: number) => `translate(0,${d.y - heights[i] - dy})`);
 
     // EXIT
-    reserve.exit().transition().duration(duration)
-      .attr('transform', 'translate(0,0)').remove();
+    reserve.exit<Flow>()
+      .classed('hidden', true).classed('visible', false)
+      .transition().duration(duration)
+      .attr('transform', d => `translate(0,${d.y - dy - 60})`);
     
     // *RECTS START*
     // JOIN RECT DATA
@@ -163,8 +166,7 @@ export default class FlowPainter implements Painter<Flow[], FlowPainterParams> {
       .attr('width', d => d.width).attr('height', d => d.height).attr('x', d => d.x);
     
     // RECT EXIT
-    rects.exit().transition().duration(duration)
-      .attr('height', 1e-6).remove();
+    rects.exit().remove();
     // *RECTS END*
 
     return this;
@@ -184,15 +186,18 @@ export default class FlowPainter implements Painter<Flow[], FlowPainterParams> {
     const flowEnter = flow.enter().append('g').attr('class', 'v-flows');
     flowEnter.append('title');
     // UPDATE
-    const flowUpdate = flowEnter.merge(flow);
+    const flowUpdate = flowEnter.merge(flow)
+      .classed('hidden', false).classed('visible', true);
     flowUpdate.select('title').text(d => d.support.join('/'));
     // Transition groups
     flowUpdate.transition().duration(duration)
       .attr('transform', (d: Flow, i: number) => `translate(0,${d.y})`);
 
     // EXIT
-    flow.exit().transition().duration(duration)
-      .attr('transform', 'translate(0,0)').remove();
+    flow.exit<Flow>()
+      .classed('hidden', true).classed('visible', false)
+      .transition().duration(duration)
+      .attr('transform', d => `translate(0,${d.y - dy - 60})`);
     
     // *PATHS START*
     // JOIN PATH DATA
