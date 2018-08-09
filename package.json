@@ -1,9 +1,13 @@
 {
   "name": "rule-matrix-js",
-  "version": "1.0.7-rc2",
+  "version": "1.0.7-rc4",
   "description": "The front-end module of rule matrix",
   "main": "dist/index",
   "typings": "dist/index",
+  "files": [
+    "dist",
+    "src"
+  ],
   "dependencies": {
     "d3": "^4.12.2",
     "d3-scale-chromatic": "^1.2.0",

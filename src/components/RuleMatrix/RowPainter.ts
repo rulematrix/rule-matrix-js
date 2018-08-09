@@ -226,7 +226,7 @@ export default class RuleRowPainter implements Painter<RuleX, RuleRowParams> {
         // rect-bg
         const textNode = tooltip.select('text').node() as SVGTextElement | null;
         const bBox = textNode ? textNode.getBoundingClientRect() : null;
-        console.log(bBox);  // tslint:disable-line
+        // console.log(bBox);  // tslint:disable-line
         const width = bBox ? bBox.width : 50;
         const height = bBox ? bBox.height : 20;
         // const x = 4;
