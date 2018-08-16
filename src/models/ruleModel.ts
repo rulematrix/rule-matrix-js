@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import * as nt from '../service/num';
-import { ModelBase, ModelMeta, SupportType, isSupportMat } from './index';
+import { ModelBase, ModelMeta } from './base';
+import { SupportType, isSupportMat } from './data';
 import { nBins } from '../config';
 
 export interface Discretizer {

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import './app.css';
 
 // import DataTable from './DataTable';
 import { labelColor } from './components/Painters/Painter';
@@ -18,9 +17,11 @@ const styles: RuleMatrixStyles = {
   rectHeight: 27,
   color: labelColor,
   displayEvidence: true,
+  height: 5000,
+  width: 5000,
   // displayFidelity: false,
   // displayFlow: false,
-  zoomable: true,
+  zoomable: false,
 };
 const model: RuleList = new RuleList(require('./test_data/model.json'));
 const streams: Streams = createStreams(require('./test_data/stream.json'));
@@ -30,7 +31,7 @@ const support: Support | SupportMat = require('./test_data/support_mat.json');
 model.support(support);
 
 ReactDOM.render(
-  <div>
+  <div style={{width: 500, height: 500, overflow: 'scroll'}}>
     <RuleMatrixApp model={model} streams={streams} support={support} styles={styles} input={input}/>
   </div>,
   document.getElementById('root') as HTMLElement

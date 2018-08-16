@@ -1,31 +1,36 @@
 import * as React from 'react';
+import { ColorType, defaultColor } from './Painters/Painter';
+
+const patternStrokeWidth = 3;
+const patternPadding = 5;
 
 export interface PatternsProps {
+  color?: ColorType;
+  labels: string[];
 }
 
-export function Patterns (props: PatternsProps) {
-    return (
-      <defs>
-        <pattern 
-          id="pattern-stripe" 
-          width="3" 
-          height="3" 
+export default function Patterns (props: PatternsProps) {
+  const color = props.color || defaultColor;
+  const labels = props.labels;
+  return (
+    <defs>
+      {labels.map((label, i) => {
+        const iColor = color(i);
+        const name = `stripe-${iColor.slice(1)}`;
+        return (<pattern 
+          key={name} 
+          id={name} 
+          width={patternPadding} 
+          height={patternPadding}
           patternUnits="userSpaceOnUse"
-          patternTransform="rotate(45)"
+          patternTransform="rotate(-45)"
         >
-          <rect width="1" height="3" transform="translate(0,0)" fill="white" />
-        </pattern>
-        <mask id="mask-stripe">
-          <rect 
-            x="0" 
-            y="0" 
-            width="100%" 
-            height="100%" 
-            fill="url(#pattern-stripe)" 
-            // stroke="white" 
-            // strokeWidth="4" 
+          <path 
+            d={`M 0 ${patternPadding / 2} H ${patternPadding}`} 
+            style={{strokeLinecap: 'square', strokeWidth: `${patternStrokeWidth}px`, stroke: iColor}}
           />
-        </mask>
-      </defs>
-    );
+        </pattern>);
+      })}
+    </defs>
+  );
 }

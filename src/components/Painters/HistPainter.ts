@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { Painter, ColorType, labelColor, defaultDuration } from './index';
+import { Painter, ColorType, labelColor, defaultDuration } from './Painter';
 import * as nt from '../../service/num';
 
 import './HistPainter.css';

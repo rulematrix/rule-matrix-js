@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import * as nt from '../../service/num';
 import { Painter, ColorType, labelColor, defaultDuration } from '../Painters';
 import { RuleX } from './models';
-import { registerStripePattern } from '../../service/utils';
+// import { registerStripePattern } from '../../service/utils';
 import { isRuleGroup } from '../../models/ruleModel';
 
 // Returns a tween for a transition’s "d" attribute, transitioning any selected
@@ -71,8 +71,8 @@ function isMat(a: number[] | number[][]): a is number[][] {
   return Array.isArray(a[0]);
 }
 
-function registerPatterns(color: ColorType, keys: number[]) {
-  return keys.map((key) => registerStripePattern(color(key), key, 3, 5));
+function getPatternIds(color: ColorType, keys: number[]) {
+  return keys.map((key) => `stripe-${color(key).slice(1)}`);
 }
 
 export class SupportPainter implements Painter<SupportData, SupportParams> {
@@ -188,7 +188,7 @@ export class SupportPainter implements Painter<SupportData, SupportParams> {
     //   .attr('width', 1e-6).remove();
 
     // Register the stripes
-    const stripeNames = registerPatterns(color, d3.range(trueLabels.length));
+    const stripeNames = getPatternIds(color, d3.range(trueLabels.length));
     
     // Render the misclassified part using stripes
     const root = selector.selectAll<SVGGElement, number[]>('g.mo-support-mat')
@@ -278,7 +278,7 @@ export class SupportPainter implements Painter<SupportData, SupportParams> {
       .attr('width', 1e-6).remove();
 
     // Register the stripes
-    const stripeNames = registerPatterns(color, d3.range(trueLabels.length));
+    const stripeNames = getPatternIds(color, d3.range(trueLabels.length));
     
     // Render the misclassified part using stripes
     const root = selector.selectAll<SVGGElement, number[]>('g.mo-support-mat')

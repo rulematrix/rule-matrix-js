@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#000000">
+    <!--
+      manifest.json provides metadata used when your web app is added to the
+      homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>RuleMatrix</title>
+    <link rel="stylesheet" href="rulematrix.css">
+    <script type="text/javascript" src="react.production.min.js"></script>
+    <script type="text/javascript" src="react-dom.production.min.js"></script>
+    <script type="text/javascript" src="d3.min.js"></script>
+    <script type="text/javascript" src="rulematrix.js"></script>
+  </head>
+  <body>
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <div id="root"></div>
+    <script>
+      console.log(ReactDOM);
+      console.log(React);
+      var styles = {
+        flowWidth: 30,
+        // mode: 'matrix',
+        rectWidth: 45,
+        rectHeight: 27,
+        color: rulematrix.labelColor,
+        displayEvidence: true,
+        height: 5000,
+        width: 5000,
+        // displayFidelity: false,
+        // displayFlow: false,
+        zoomable: false,
+      };
+
+      function loadJSON(path, callback) {   
+
+        var xobj = new XMLHttpRequest();
+            xobj.overrideMimeType("application/json");
+        xobj.open('GET', path, true); // Replace 'my_data' with the path to your file
+        xobj.onreadystatechange = function () {
+          if (xobj.readyState == 4 && xobj.status == "200") {
+            // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+            callback(JSON.parse(xobj.responseText));
+          }
+        };
+        xobj.send(null);  
+      }
+
+      function start() {
+        loadJSON('test_data/model.json', function(model_json) {
+          var model = new rulematrix.RuleList(model_json);
+          loadJSON('test_data/stream.json', function(stream_json) {
+            var streams = new rulematrix.createStreams(stream_json);
+            loadJSON('test_data/support_mat.json', function(support) {
+              model.support(support); 
+              
+              ReactDOM.render(React.createElement('div', {
+                style: {width: 500, height: 500, overflow: 'scroll'}
+              }, React.createElement(rulematrix.RuleMatrixApp, {
+                model: model, streams: streams, support: support, styles: styles, input: null
+              })), document.getElementById("root"));
+            })
+          })
+        });
+      }
+
+      start();
+      // var model = rulematrix.RuleList(require('../src/test_data/model.json'));
+      // var streams = rulematrix.createStreams(require('../src/test_data/stream.json'));
+      // // const streams: ConditionalStreams = createConditionalStreams(require('./test_data/stream_cond.json'));
+      // // const support: Support | SupportMat = require('./test_data/support.json');
+      // var support = require('../src/test_data/support_mat.json');
+      // console.log(model);
+      // model.support(support); 
+      // var styles = {
+      //   flowWidth: 30,
+      //   // mode: 'matrix',
+      //   rectWidth: 45,
+      //   rectHeight: 27,
+      //   color: labelColor,
+      //   displayEvidence: true,
+      //   height: 5000,
+      //   width: 5000,
+      //   // displayFidelity: false,
+      //   // displayFlow: false,
+      //   zoomable: false,
+      // };
+      // ReactDOM.render(ReactDOM.createElement('div', {
+      //   style: {width: 500, height: 500, overflow: 'scroll'}
+      // }, ReactDOM.createElement(rulematrix.RuleMatrixApp, {
+      //   model: model, streams: streams, support: support, styles: styles, input: null
+      // })));
+    </script>
+  </body>
+</html>

@@ -1,33 +1,18 @@
 import * as React from 'react';
-import './app.css';
-import RuleMatrix from './components/RuleMatrix';
+import RuleMatrix, { RuleMatrixPropsOptional } from './components/RuleMatrix';
 
 // import DataTable from './DataTable';
 // import { ColorType, labelColor } from './components/Painters/Painter';
-import { RuleList } from './models/ruleModel';
-import { ConditionalStreams, Streams, Support, SupportMat } from './models/data';
+import { RuleList, ConditionalStreams, Streams, Support, SupportMat } from './models';
 
 // import * as fs from 'fs';
-import { Patterns } from './components/patterns';
-import { RuleMatrixPropsOptional } from './components/RuleMatrix/index';
+import Patterns from './components/Patterns';
 import Legend from './components/Legend';
-
-// export interface RuleStyles {
-//   flowWidth: number;
-//   rectWidth: number;
-//   rectHeight: number;
-//   displayFlow: boolean;
-//   displayFidelity: boolean;
-//   displayEvidence: boolean;
-//   zoomable: boolean;
-//   // mode: 'list' | 'matrix';
-//   color: ColorType;
-//   // conditional: boolean;
-// }
 
 export type RuleMatrixStyles = Partial<RuleMatrixPropsOptional>;
 
 export interface AppProps {
+  id?: string;
   model?: RuleList;
   streams?: Streams | ConditionalStreams;
   support?: Support | SupportMat;
@@ -51,13 +36,14 @@ export default class RuleMatrixApp extends React.Component<AppProps, AppState> {
     super(props);
   }
   render() {
-    const { model, streams, support, input, styles} = this.props;
+    const { model, streams, support, input, styles, id } = this.props;
     const height = (styles && styles.height) ? styles.height : 960;
     const width = (styles && styles.width) ? styles.width : 800;
     return (
-      // <div className="App">
-      <svg id="main" height={height} width={width}>
-        <Patterns/>
+      <svg id={id || 'main'} height={height} width={width}>
+        {model &&
+          <Patterns labels={model.meta.labelNames} color={styles && styles.color}/>
+        }
         {model &&
           <Legend labels={model.meta.labelNames} color={styles && styles.color} transform={`translate(150, 10)`}/>
         }
@@ -73,7 +59,6 @@ export default class RuleMatrixApp extends React.Component<AppProps, AppState> {
         }
 
       </svg>
-      // </div>
     );
   }
 }

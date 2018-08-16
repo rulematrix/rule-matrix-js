@@ -7,8 +7,6 @@ import {
   Condition,
 } from '../models';
 
-import * as d3 from 'd3';
-
 export function countFeatureFreq(model: ModelBase, nFeatures: number): (number | undefined)[] {
 
   const counts = new Array(nFeatures);
@@ -53,28 +51,28 @@ export function condition2String(
   };
 }
 
-export function registerStripePattern(
-  color: string, key: number, strokeWidth: number = 2, padding: number = 4
-): string {
-  const defs = d3.select('svg#main').select('defs');
-  const patternName = `stripe-${key}-${strokeWidth}-${padding}`;
-  const patternNode = defs.select(`#${patternName}`).node();
-  const pattern = patternNode === null 
-    ? defs.append('pattern').attr('id', patternName)
-    : defs.select(`#${patternName}`);
-  pattern.attr('width', padding).attr('height', padding)
-    .attr('patternUnits', 'userSpaceOnUse')
-    .attr('patternTransform', 'rotate(-45)');
+// export function registerStripePattern(
+//   svg: SVGSVGElement, color: string, strokeWidth: number = 2, padding: number = 4
+// ): string {
+//   const defs = d3.select(svg).select('defs');
+//   const patternName = `stripe-${color.slice(1)}-${strokeWidth}-${padding}`;
+//   const patternNode = defs.select(`#${patternName}`).node();
+//   const pattern = patternNode === null 
+//     ? defs.append('pattern').attr('id', patternName)
+//     : defs.select(`#${patternName}`);
+//   pattern.attr('width', padding).attr('height', padding)
+//     .attr('patternUnits', 'userSpaceOnUse')
+//     .attr('patternTransform', 'rotate(-45)');
 
-  const path = pattern.select('path').node() === null
-    ? pattern.append('path') : pattern.select('path');
-  path.attr('d', `M 0 ${padding / 2} H ${padding}`)
-    .style('stroke-linecap', 'square')
-    .style('stroke-width', `${strokeWidth}px`)
-    .style('stroke', color);
-  // defs.append('pattern')
-  return patternName;
-}
+//   const path = pattern.select('path').node() === null
+//     ? pattern.append('path') : pattern.select('path');
+//   path.attr('d', `M 0 ${padding / 2} H ${padding}`)
+//     .style('stroke-linecap', 'square')
+//     .style('stroke-width', `${strokeWidth}px`)
+//     .style('stroke', color);
+//   // defs.append('pattern')
+//   return patternName;
+// }
 
 export interface Cache<T> {
   count: number;
