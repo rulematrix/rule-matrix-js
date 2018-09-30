@@ -67,10 +67,6 @@ export interface SupportParams extends Partial<OptionalSupportParams> {
 
 export type SupportData = number[] | number[][];
 
-function isMat(a: number[] | number[][]): a is number[][] {
-  return Array.isArray(a[0]);
-}
-
 function getPatternIds(color: ColorType, keys: number[]) {
   return keys.map((key) => `stripe-${color(key).slice(1)}`);
 }
@@ -94,7 +90,7 @@ export class SupportPainter implements Painter<SupportData, SupportParams> {
     selector: d3.Selection<SVGGElement, any, GElement, any>,
   ): this {
     const support = this.support;
-    if (isMat(support)) {
+    if (nt.isMat(support)) {
       this.renderSimple(selector, []);
       this.renderMat(selector, support);
     } else {
@@ -135,8 +131,10 @@ export class SupportPainter implements Painter<SupportData, SupportParams> {
     selector: d3.Selection<SVGGElement, any, GElement, any>,
     support: number[][]
   ): this {
+    // Support is a confusion matrix
+    // The (i, j) of support means the number of data with label i predicted as label j
     const { height, widthFactor, duration, color } = this.params;
-    const trueLabels = support.map((s: number[]) => nt.sum(s));
+    // const trueLabels = support.map((s: number[]) => nt.sum(s));
     const predictions = support.length ? nt.sumVec(support) : [];
     const truePredictions = support.map((s, i) => s[i]);
     const total = nt.sum(predictions);
@@ -188,7 +186,7 @@ export class SupportPainter implements Painter<SupportData, SupportParams> {
     //   .attr('width', 1e-6).remove();
 
     // Register the stripes
-    const stripeNames = getPatternIds(color, d3.range(trueLabels.length));
+    const stripeNames = getPatternIds(color, d3.range(support.length));
     
     // Render the misclassified part using stripes
     const root = selector.selectAll<SVGGElement, number[]>('g.mo-support-mat')
@@ -379,7 +377,7 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
   ): this {
     const { duration } = this.params;
     const rules = this.rules;
-    this.useMat = rules.length > 0 && isMat(rules[0].support);
+    this.useMat = rules.length > 0 && nt.isMat(rules[0].support);
     // console.log('useMat', rules[0].support); // tslint:disable-line
     // console.log('useMat', this.useMat); // tslint:disable-line
 
@@ -430,13 +428,13 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
     let rectWidths = [80, 67];
 
     if (this.useMat) {
-      const totalSupport = nt.sum(rules.map((r) => r.totalSupport));
+      const totalSupport = nt.sum(rules.map((r) => r.totalSupport || 0));
       const fidelity = nt.sum(
-        rules.map(r => isMat(r.support) ? nt.sum(r.support.map(s => s[r.label])) : 0)
+        rules.map(r => r._support[r.label])
       ) / totalSupport;
     
       const acc = nt.sum(
-        rules.map(r => isMat(r.support) ? nt.sum(r.support.map((s, i) => s[i])) : 0)
+        rules.map(r => nt.isMat(r.support) ? nt.sum(r.support.map((s, i) => s[i])) : 0)
       ) / totalSupport;
 
       headerTexts = ['Output (Pr)', `Fidelity (${(fidelity * 100).toFixed(0)}/100)`, 
@@ -586,12 +584,11 @@ public renderOutputs(
     // Update
     const updateGroup = update.select<SVGGElement>('g.mo-fidelity')
       .datum(d => {
-        const fidelity = isMat(d.support) 
-          ? (nt.sum(d.support.map(s => s[d.label])) / (d.totalSupport + 1e-6)) : undefined;
+        const fidelity = d.fidelity;
         const color = fidelity !== undefined 
           ? (fidelity > 0.8 ? '#52c41a' :  fidelity > 0.5 ? '#faad14' : '#f5222d') : null;
         const angle = (!isRuleGroup(d) && fidelity !== undefined) ? (Math.PI * fidelity * 2 - 1e-3) : 0;
-        return {...d, fidelity, color, angle};
+        return {...d, color, angle};
       });
     updateGroup.select('text.mo-fidelity')
       .attr('font-size', d => isRuleGroup(d) ? fontSize * 0.8 : fontSize)

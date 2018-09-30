@@ -20,6 +20,7 @@ export interface RuleMatrixPropsOptional {
   zoomable: boolean;
   color: ColorType;
   minSupport: number;
+  minFidelity: number;
   intervalY: number;
   intervalX: number;
   width: number;
@@ -52,6 +53,7 @@ export default class RuleMatrix extends React.PureComponent<RuleMatrixProps, Rul
     zoomable: true,
     color: defaultLabelColor,
     minSupport: 0.02,
+    minFidelity: 0.1,
     intervalY: 10,
     intervalX: 0.2,
     width: 960,
@@ -83,7 +85,7 @@ export default class RuleMatrix extends React.PureComponent<RuleMatrixProps, Rul
   painterUpdate() {
     const {streams, model, x0, y0, rectWidth, rectHeight, flowWidth, evidenceWidth} 
       = this.props;
-    const {minSupport, support, input, color, displayFlow, displayEvidence, zoomable} = this.props;
+    const {minSupport, minFidelity, support, input, color, displayFlow, displayEvidence, zoomable} = this.props;
     console.log('updating matrix'); // tslint:disable-line
     this.state.painter.update({
       // dataset,
@@ -102,6 +104,7 @@ export default class RuleMatrix extends React.PureComponent<RuleMatrixProps, Rul
       // displayFidelity,
       model,
       minSupport,
+      minFidelity,
       zoomable,
     })
       .render(d3.select<SVGGElement, {}>(this.ref));

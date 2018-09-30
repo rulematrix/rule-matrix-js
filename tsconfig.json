@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
+    "outDir": "dist",
     "module": "es2015",
-    "target": "es6",
+    "target": "es5",
     "declaration": true,
     "downlevelIteration": true,
     "importHelpers": true,

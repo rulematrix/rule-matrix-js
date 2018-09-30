@@ -1,10 +1,10 @@
 import * as d3 from 'd3';
 import { ColorType, Painter, labelColor, defaultDuration } from '../Painters';
 import * as nt from '../../service/num';
-import { Rule, Streams, isRuleGroup, RuleList, groupRules, rankRuleFeatures } from '../../models';
+import { Rule, Streams, isRuleGroup, RuleList, groupRules, rankRuleFeatures, groupRulesBy } from '../../models';
 import RowPainter from './RowPainter';
 import { RuleX, ConditionX, Feature } from './models';
-import { ConditionalStreams, isConditionalStreams, groupBySupport } from '../../models';
+import { ConditionalStreams, isConditionalStreams } from '../../models';
 import FlowPainter from './FlowPainter';
 import OutputPainter from './OutputPainter';
 import HeaderPainter from './HeaderPainter';
@@ -37,7 +37,7 @@ function computeExistingFeatures(rules: Rule[], nFeatures: number) {
  */
 function initRuleXs(rules: Rule[], model: RuleList): RuleX[] {
   return rules.map((r, i) => {
-    const {conditions, ...rest} = r;
+    const {conditions, _support, ...rest} = r;
     let conditionXs: ConditionX[] = [];
     // if (i !== rules.length - 1) 
     const conditionsFiltered = conditions.filter((c) => c.feature >= 0);
@@ -53,9 +53,9 @@ function initRuleXs(rules: Rule[], model: RuleList): RuleX[] {
       // histRange: model.categoryHistRange(c.feature, c.category),
       isCategorical: model.meta.isCategorical[c.feature]
     }));
-
+    const _supportNew = _support ? _support : model.meta.labelNames.map(() => 0);
     return {
-      ...rest, conditions: conditionXs, height: 0, x: 0, y: 0, width: 0, expanded: false,
+      ...rest, conditions: conditionXs, height: 0, x: 0, y: 0, width: 0, expanded: false, _support: _supportNew
     };
   });
 }
@@ -66,6 +66,7 @@ export interface OptionalParams {
   duration: number;
   fontSize: number;
   minSupport: number;
+  minFidelity: number;
   headerSize: number;
   headerRotate: number;
   paddingX: number;
@@ -99,6 +100,7 @@ export interface RuleMatrixParams extends Partial<OptionalParams> {
 export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> {
   public static defaultParams: OptionalParams = {
     minSupport: 0.01,
+    minFidelity: 0.1,
     color: labelColor,
     elemWidth: 30,
     elemHeight: 30,
@@ -123,6 +125,7 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
   private selector: d3.Selection<SVGGElement, any, any, any>;
   private params: RuleMatrixParams & OptionalParams;
   private minSupport: number;
+  private minFidelity: number;
   private model: RuleList;
   private support: number[][] | number[][][];
   private rules: RuleX[];
@@ -219,15 +222,22 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
   }
 
   public updateRules(): this {
-    const {model, minSupport, support} = this.params;
-    if (this.model !== model || this.minSupport !== minSupport || this.support !== support) {
+    const {model, minSupport, minFidelity, support} = this.params;
+    if (this.model !== model || this.minSupport !== minSupport 
+      || this.support !== support || this.minFidelity !== minFidelity) {
+      console.log(minFidelity);  //tslint:disable-line
+      console.log(this.rules); //tslint:disable-line
       // console.log('Updating Rules'); // tslint:disable-line
       const rules = model.getRules();
       const nFeatures = model.nFeatures;
 
       // Filter rules by grouping
-      const supportSum = nt.sum(rules.map(r => r.totalSupport));
-      const groupedRules = groupBySupport(rules, minSupport * supportSum);
+      const supportSum = nt.sum(rules.map(r => r.totalSupport || 0));
+      const groupedRules = groupRulesBy(rules, (rule) => {
+        return (rule.totalSupport === undefined ? true : (rule.totalSupport >= (minSupport * supportSum)))
+          && (rule.fidelity === undefined ? true : rule.fidelity >= minFidelity);
+      });
+      // const groupedRules = groupBySupport(rules, minSupport * supportSum);
       
       this.rules = initRuleXs(groupedRules, model);
 
@@ -242,7 +252,9 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
     }
     this.support = support;
     this.minSupport = minSupport;
+    this.minFidelity = minFidelity;
     this.model = model;
+
     return this;
   }
 

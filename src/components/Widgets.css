@@ -1,0 +1,10 @@
+.rm-widgets {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    display: table;
+}
+
+.rm-slider {
+    display: table;
+    margin: 8px 16px;
+}

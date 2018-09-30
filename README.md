@@ -33,7 +33,7 @@ model.support(support);
 
 ReactDOM.render(
   <div>
-    <RuleMatrixApp model={model} streams={streams} support={support} styles={styles} input={input}/>
+    <RuleMatrixApp model={model} streams={streams} support={support} styles={styles} input={input} widgets={true}/>
   </div>,
   document.getElementById('root') as HTMLElement
 );

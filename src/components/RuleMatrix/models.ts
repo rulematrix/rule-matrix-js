@@ -27,6 +27,7 @@ export interface RuleX extends Rule {
   height: number;
   width: number;
   expanded: boolean;
+  _support: number[];
   // support?: number[] | number[][];
   // support: number[];
   // totalSupport: number;

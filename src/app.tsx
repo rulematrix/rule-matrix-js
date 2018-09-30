@@ -17,8 +17,8 @@ const styles: RuleMatrixStyles = {
   rectHeight: 27,
   color: labelColor,
   displayEvidence: true,
-  height: 5000,
-  width: 5000,
+  // height: 5000,
+  // width: 5000,
   // displayFidelity: false,
   // displayFlow: false,
   zoomable: false,
@@ -31,8 +31,8 @@ const support: Support | SupportMat = require('./test_data/support_mat.json');
 model.support(support);
 
 ReactDOM.render(
-  <div style={{width: 500, height: 500, overflow: 'scroll'}}>
-    <RuleMatrixApp model={model} streams={streams} support={support} styles={styles} input={input}/>
+  <div style={{width: 800, height: 600, overflow: 'scroll'}}>
+    <RuleMatrixApp model={model} streams={streams} support={support} styles={styles} input={input} widgets={true}/>
   </div>,
   document.getElementById('root') as HTMLElement
 );

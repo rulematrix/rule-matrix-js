@@ -25,31 +25,36 @@ export function groupRules(rules: Rule[]): Rule | RuleGroup {
       nested.push(rule);
     }
   }
-  const supports = nested.map(rule => rule.support);
-  let support: number[] | number[][];
-  let supportSums: number[];
-  let _support: number[];
+  const supports: number[][][] = []; 
+  const _supports: number[][] = [];
+  nested.forEach((rule) => {
+    if (rule.support)
+      supports.push(rule.support);
+    if (rule._support) {
+      _supports.push(rule._support);
+    }
+  });
+  let support: number[][] | undefined;
+  let _support: number[] | undefined;
   // let fidelity: number;
-  if (Array.isArray(supports[0][0])) {
+  if (supports.length > 0) {
     support = nt.sumMat(supports as number[][][]);
-    supportSums = (<number[][][]> supports).map(s => nt.sum(nt.sumVec(s)));
     // _support = nt.sumVec(support);
-    _support = support.map(s => nt.sum(s));
-  } else {
-    support = nt.sumVec(supports as number[][]);
-    supportSums = (<number[][]> supports).map(s => nt.sum(s));
-    _support = support;
+    _support = nt.sumVec(support);
+  } else if (_supports.length > 0) {
+    _support = nt.sumVec(_supports);
   }
-  const totalSupport = nt.sum(supportSums);
+  const totalSupport = _support && nt.sum(_support);
   const cover = nt.sum(rules.map(r => r.cover));
   const output = nt.sumVec(nested.map(r => nt.muls(r.output, r.cover / cover)));
   const label = nt.argMax(output);
+  const fidelity = (_support && totalSupport) && (_support[label] / totalSupport);
   const conditions: Condition[] = [];
   rules.forEach((r, i) => {
     const conds = r.conditions.map((c) => ({...c, rank: i}));
     conditions.push(...conds);
   });
-  const ret = { rules, support, _support, output, label, totalSupport, conditions, idx: rules[0].idx, cover };
+  const ret = { rules, support, _support, output, label, totalSupport, conditions, idx: rules[0].idx, cover, fidelity };
   rules.forEach((r) => r.parent = ret);
   return ret;
 }
@@ -113,7 +118,7 @@ export function groupBySupport(rules: Rule[], minSupport: number = 0.01): Rule[]
   //   retRules.push(groupRules(tmpRules));
   // }
   // return retRules;
-  return groupRulesBy(rules, (rule: Rule) => rule.totalSupport >= minSupport);
+  return groupRulesBy(rules, (rule: Rule) => rule.totalSupport === undefined ? true : rule.totalSupport >= minSupport);
 }
 
 // export function groupBy

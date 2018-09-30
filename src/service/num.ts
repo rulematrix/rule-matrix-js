@@ -31,8 +31,8 @@ export type Vector =
 //   }
 // }
 
-export function isMat(a: number[] | number[][]): a is number[][] {
-  if (a.length)
+export function isMat(a?: number[] | number[][]): a is number[][] {
+  if (a && a.length)
     return Array.isArray(a[0]);
   return false;
 }

@@ -25,12 +25,33 @@ export interface Rule {
   readonly output: number[];
   readonly label: number;
   readonly idx: number;
-  readonly cover: number;
-  support: number[] | number[][];
-  _support: number[];
-  totalSupport: number;
+  readonly cover: number;  // The number or the ratio of data (during training) captured by this rule
+  // The confusion matrix of the surrogated model on the data captured by this rule
+  // (i, j) means the data with label i is predicted as label j
+  support?: number[][];
+  _support?: number[];  // The number of data with each predicted labels
+  totalSupport?: number;
+  fidelity?: number;
   parent?: RuleGroup;
   // _support: number;  // the origin number of support obtained during training
+}
+
+export function updateRuleSupport(r: Rule, support?: number[] | number[][]) {
+  if (support) {
+    if (nt.isMat(support)) {
+      r.support = support;
+      r._support = nt.sumVec(r.support);
+      r.totalSupport = nt.sum(r._support);
+      r.fidelity = r._support[r.label] / r.totalSupport;
+    } else {
+      r.support = undefined;
+      r._support = support;
+      r.totalSupport = nt.sum(r._support);
+      r.fidelity = undefined;
+    }
+  } else {
+    r.support = r._support = r.totalSupport = r.fidelity = undefined;
+  }
 }
 
 export interface RuleGroup extends Rule {
@@ -88,7 +109,14 @@ export class RuleList implements RuleModel {
     this.supports = supports;
     this.discretizers = discretizers;
     this.rules.forEach((r, i) => {
-      r._support = nt.isMat(r.support) ? r.support.map(s => nt.sum(s)) : r.support;
+      if (r.support) {
+        if (nt.isMat(r.support)) {
+          r._support = r.support.map(s => nt.sum(s));
+        } else {
+          r._support = r.support;
+          r.support = undefined;
+        }
+      }
     });
     this.maxSupport = d3.max(supports, nt.sum) || 0.1;
     // this.minSupport = 0.01;
@@ -117,14 +145,7 @@ export class RuleList implements RuleModel {
       this.maxSupport = d3.max(newSupport, nt.sum) || 0.1;
     }
     this.rules.forEach((r, i) => {
-      const support = newSupport[i];
-      r.support = support;
-      if (nt.isMat(support)) {
-        r._support = support.map(s => nt.sum(s));
-      } else {
-        r._support = support;
-      }
-      r.totalSupport = nt.sum(r._support);
+      updateRuleSupport(r, newSupport[i]);
     });
     // console.log('Support changed'); // tslint:disable-line
     
