@@ -56,6 +56,20 @@ RuleMatrixApp support the following styling (the `styles` prop) options:
   * `width`: (`number`) The width of the svg;
   * `height`: (`number`) The height of the svg;
 
+## Development
+
+1. Clone the project to your machine.
+
+2. Run `npm install` to install dependencies. This might take a while
+
+3. Run `npm run start` to start a development server which would watch the changes in code.
+
+4. After changes are made, run `gulp test` to build a test distribution (in `build` dir). 
+   Then run `serve build` to check the vis is rendered properly.
+
+5. Run `gulp` or `npm build` to build the distribution. 
+   The development distribution (a module) suitable for a npm package will locate in `dist`.
+   The production distribution (a standard alone js module) suitable to include in a `<script>` tag in browser will locate in `build`.
 
 ## Known Issues
 
