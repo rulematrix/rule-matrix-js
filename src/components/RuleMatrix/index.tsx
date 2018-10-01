@@ -86,7 +86,7 @@ export default class RuleMatrix extends React.PureComponent<RuleMatrixProps, Rul
     const {streams, model, x0, y0, rectWidth, rectHeight, flowWidth, evidenceWidth} 
       = this.props;
     const {minSupport, minFidelity, support, input, color, displayFlow, displayEvidence, zoomable} = this.props;
-    console.log('updating matrix'); // tslint:disable-line
+    // console.log('updating matrix'); // tslint:disable-line
     this.state.painter.update({
       // dataset,
       streams, 

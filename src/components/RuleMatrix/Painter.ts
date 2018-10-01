@@ -225,8 +225,8 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
     const {model, minSupport, minFidelity, support} = this.params;
     if (this.model !== model || this.minSupport !== minSupport 
       || this.support !== support || this.minFidelity !== minFidelity) {
-      console.log(minFidelity);  //tslint:disable-line
-      console.log(this.rules); //tslint:disable-line
+      // console.log(minFidelity);  //tslint:disable-line
+      // console.log(this.rules); //tslint:disable-line
       // console.log('Updating Rules'); // tslint:disable-line
       const rules = model.getRules();
       const nFeatures = model.nFeatures;
@@ -415,10 +415,12 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
     // Joined
     const rule = root
       .selectAll<SVGGElement, {}>('g.matrix-rule')
-      .data<RuleX>(this.rules, function (r: RuleX) { return r ? `r-${r.idx}` : this.id; });
+      .data<RuleX>(this.rules, function (r: RuleX, i: number) { 
+        return (r ? `r-${r.idx}` : this.getAttribute('data-id')) || String(i); 
+      });
 
     // Enter
-    const ruleEnter = rule.enter().append<SVGGElement>('g').attr('id', d => `r-${d.idx}`)
+    const ruleEnter = rule.enter().append<SVGGElement>('g').attr('data-id', d => `r-${d.idx}`)
       .attr('class', 'matrix-rule')
       .attr('transform', (d: RuleX) => d.parent ? `translate(${d.x},${d.y - 40})` : 'translate(0,0)');
 
@@ -437,7 +439,7 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
       .transition()
       .duration(duration)
       .attr('transform', (d, i, nodes) => 
-        `translate(0,${collapseYs.get(nodes[i].id)})`
+        `translate(0,${collapseYs.get(nodes[i].id) || 0})`
       ).transition().delay(300)
       .attr('display', 'none');
     
@@ -541,16 +543,16 @@ export default class RuleMatrixPainter implements Painter<{}, RuleMatrixParams> 
   }
   
   private renderToolTip(cursorFollow: d3.Selection<SVGGElement, any, any, any>) {
-    const tooltipEnter = cursorFollow.selectAll('g.tooltip')
+    const tooltipEnter = cursorFollow.selectAll('g.rm-tooltip')
       .data(['tooltip']).enter()
-      .append<SVGGElement>('g').attr('class', 'tooltip')
+      .append<SVGGElement>('g').attr('class', 'rm-tooltip')
       .attr('transform', `translate(4,-6)`);
 
-    tooltipEnter.append('rect').attr('class', 'tooltip');
+    tooltipEnter.append('rect').attr('class', 'rm-tooltip');
       // .attr('stroke', '#444').attr('stroke-opacity', 0.4);
-    tooltipEnter.append('text').attr('class', 'tooltip')
+    tooltipEnter.append('text').attr('class', 'rm-tooltip')
       .attr('text-anchor', 'start').attr('dx', 5).attr('dy', -2);
-    const tooltip = cursorFollow.select<SVGGElement>('g.tooltip');
+    const tooltip = cursorFollow.select<SVGGElement>('g.rm-tooltip');
     return tooltip;
   }
 

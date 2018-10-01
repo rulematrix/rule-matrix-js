@@ -132,13 +132,13 @@ export default class FlowPainter implements Painter<Flow[], FlowPainterParams> {
       .attr('height', divideHeight);
     // Transition groups
     reserveUpdate.transition().duration(duration)
-      .attr('transform', (d: Flow, i: number) => `translate(0,${d.y - heights[i] - dy})`);
+      .attr('transform', (d: Flow, i: number) => `translate(0,${(d.y - heights[i] - dy) || 0})`);
 
     // EXIT
     reserve.exit<Flow>()
       .classed('hidden', true).classed('visible', false)
       .transition().duration(duration)
-      .attr('transform', d => `translate(0,${d.y - dy - 60})`);
+      .attr('transform', d => `translate(0,${(d.y - dy - 60) || 0})`);
     
     // *RECTS START*
     // JOIN RECT DATA
@@ -191,13 +191,13 @@ export default class FlowPainter implements Painter<Flow[], FlowPainterParams> {
     flowUpdate.select('title').text(d => d.support.join('/'));
     // Transition groups
     flowUpdate.transition().duration(duration)
-      .attr('transform', (d: Flow, i: number) => `translate(0,${d.y})`);
+      .attr('transform', (d: Flow, i: number) => `translate(0,${d.y || 0})`);
 
     // EXIT
     flow.exit<Flow>()
       .classed('hidden', true).classed('visible', false)
       .transition().duration(duration)
-      .attr('transform', d => `translate(0,${d.y - dy - 60})`);
+      .attr('transform', d => `translate(0,${(d.y - dy - 60) || 0})`);
     
     // *PATHS START*
     // JOIN PATH DATA

@@ -49,9 +49,9 @@ export class AreaPainter implements Painter<Histogram[], Partial<AreaPainterPara
     });
     const xMin = Math.min(...(lineDataList.map((line, i) => line[0][0] - binSizes[i])));
     const xMax = Math.max(...(lineDataList.map((line, i) => line[line.length - 1][0] + binSizes[i])));
-    console.log(lineDataList); // tslint:disable-line
-    console.log(xMin); // tslint:disable-line
-    console.log(xMax); // tslint:disable-line
+    // console.log(lineDataList); // tslint:disable-line
+    // console.log(xMin); // tslint:disable-line
+    // console.log(xMax); // tslint:disable-line
     const xScale = d3
       .scaleLinear()
       .domain([xMin, xMax]) // input

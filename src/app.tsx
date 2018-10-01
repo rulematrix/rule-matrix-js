@@ -21,7 +21,7 @@ const styles: RuleMatrixStyles = {
   // width: 5000,
   // displayFidelity: false,
   // displayFlow: false,
-  zoomable: false,
+  zoomable: false
 };
 const model: RuleList = new RuleList(require('./test_data/model.json'));
 const streams: Streams = createStreams(require('./test_data/stream.json'));
@@ -31,8 +31,29 @@ const support: Support | SupportMat = require('./test_data/support_mat.json');
 model.support(support);
 
 ReactDOM.render(
-  <div style={{width: 800, height: 600, overflow: 'scroll'}}>
-    <RuleMatrixApp model={model} streams={streams} support={support} styles={styles} input={input} widgets={true}/>
+  <div>
+    <div style={{ width: 800, height: 600, overflow: 'scroll' }}>
+      <RuleMatrixApp
+        model={model}
+        streams={streams}
+        support={support}
+        styles={styles}
+        input={input}
+        widgets={true}
+        id="rm-1"
+      />
+    </div>
+    <div style={{ width: 800, height: 600, overflow: 'scroll' }}>
+      <RuleMatrixApp
+        model={model}
+        streams={streams}
+        support={support}
+        styles={styles}
+        input={input}
+        widgets={true}
+        id="rm-2"
+      />
+    </div>
   </div>,
   document.getElementById('root') as HTMLElement
 );

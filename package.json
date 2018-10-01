@@ -1,6 +1,6 @@
 {
   "name": "rule-matrix-js",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "The front-end module of rule matrix",
   "main": "dist/index",
   "typings": "dist/index",
