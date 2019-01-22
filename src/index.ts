@@ -1,7 +1,7 @@
-import { default as RuleMatrix } from './components/RuleMatrix';
-import { default as RuleMatrixApp } from './RuleMatrixApp';
-import * as models from './models';
-import * as painters from './components/Painters';
+const RuleMatrix = require('./components/RuleMatrix');
+const RuleMatrixApp = require('./RuleMatrixApp');
+const models = require('./models');
+const painters = require('./components/Painters');
 
 module.exports = {
   RuleMatrix,
