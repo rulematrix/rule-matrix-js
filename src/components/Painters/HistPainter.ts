@@ -20,8 +20,8 @@ function checkBins(hists: Hist[]) {
 }
 
 function brush(
-  range: [number, number], 
-  bars: d3.Selection<SVGRectElement, any, any, any>, 
+  range: [number, number],
+  bars: d3.Selection<SVGRectElement, any, any, any>,
   x: (d: any, i: number) => number
 ): void {
   bars.classed('hp-hist-active', (d, i) => {
@@ -31,7 +31,7 @@ function brush(
 }
 
 // function packHists(hists: Hist[], pack: number = 1): Hist[] {
-//   const histsPacked = hists.map((hist) => 
+//   const histsPacked = hists.map((hist) =>
 //   Array.from({length: Math.round(hist.length / pack)}, (_, i) => (
 //     nt.sum(Array.from({length: pack}, (__, j) => hist[i * pack + j]))
 //   )));
@@ -123,7 +123,7 @@ export default class HistPainter implements Painter<Hist[], HistParams> {
         break;
     }
     return this;
-    
+
   }
 
   renderBrush<GElement extends d3.BaseType>(
@@ -132,9 +132,9 @@ export default class HistPainter implements Painter<Hist[], HistParams> {
   ): this {
     const {interval, duration, margin, height} = this.params;
 
-    const rangeRect = selector.selectAll('rect.hp-brush')
+    const rangeRect = selector.selectAll<SVGRectElement, Hist[]>('rect.hp-brush')
       .data((interval && this.hists.length) ? [interval] : []);
-    
+
     rangeRect.exit().transition().duration(duration)
       .attr('height', 1e-6).attr('y', height / 2).remove();
 
@@ -152,7 +152,7 @@ export default class HistPainter implements Painter<Hist[], HistParams> {
     const { height, color, margin, duration, padding, opacity } = this.params;
     const hists = this.hists;
     // const histsPacked = packHists(hists, pack);
-    const histG = selector.selectAll('g.hp-hists').data(hists);
+    const histG = selector.selectAll<SVGGElement, Hist[]>('g.hp-hists').data(hists);
 
     // Exit
     const exitTransition = histG
@@ -166,7 +166,7 @@ export default class HistPainter implements Painter<Hist[], HistParams> {
       this.renderBrush(selector);
       return this;
     }
-  
+
     // Compute layout stuff
     const {xs, step, xScaler, yScaler, bandWidth, interval} = computeLayout(hists, this.params);
     // const { nBins } = checkBins(hists);
@@ -255,7 +255,7 @@ export default class HistPainter implements Painter<Hist[], HistParams> {
     const { interval, width, height, color, margin, duration, padding } = this.params;
     const hists = this.hists;
 
-    const histG = selector.selectAll('g.hp-hists').data(hists);
+    const histG = selector.selectAll<SVGGElement, Hist[]>('g.hp-hists').data(hists);
 
     // Exit
     const exitTransition = histG
@@ -305,7 +305,7 @@ export default class HistPainter implements Painter<Hist[], HistParams> {
     /* RECTS START */
     const rects = histGUpdate
       .selectAll<SVGRectElement, [number, number]>('rect')
-      .data<[number, number]>((d: Hist, i: number) => 
+      .data<[number, number]>((d: Hist, i: number) =>
         Array.from(d, (v: number, j: number) => [y0s[i][j], y1s[i][j]] as [number, number])
       );
 

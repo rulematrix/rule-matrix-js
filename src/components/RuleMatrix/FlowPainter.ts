@@ -71,7 +71,7 @@ export default class FlowPainter implements Painter<Flow[], FlowPainterParams> {
     const nClasses = flows.length > 0 ? flows[0].support.length : 0;
     this.flowSums = flows.map((r: Flow) => nt.sum(r.support));
 
-    let reserves: number[][] = 
+    let reserves: number[][] =
       Array.from({length: nClasses}, (_, i) => flows.map(flow => flow.support[i]));
     reserves = reserves.map(reserve => nt.cumsum(reserve.reverse()).reverse());
     this.reserveSums = new Array(flows.length).fill(0);
@@ -101,7 +101,7 @@ export default class FlowPainter implements Painter<Flow[], FlowPainterParams> {
 
     // Render Flows
     this.renderFlows(selector);
-    
+
     return this;
   }
 
@@ -113,7 +113,7 @@ export default class FlowPainter implements Painter<Flow[], FlowPainterParams> {
     const multiplier = width / reserveSums[0];
 
     // JOIN
-    const reserve = root.selectAll('g.v-reserves').data(flows);
+    const reserve = root.selectAll<SVGGElement, Flow[]>('g.v-reserves').data(flows);
 
     // ENTER
     const reserveEnter = reserve.enter().append('g').attr('class', 'v-reserves');
@@ -139,11 +139,11 @@ export default class FlowPainter implements Painter<Flow[], FlowPainterParams> {
       .classed('hidden', true).classed('visible', false)
       .transition().duration(duration)
       .attr('transform', d => `translate(0,${(d.y - dy - 60) || 0})`);
-    
+
     // *RECTS START*
     // JOIN RECT DATA
     // console.warn(reserves);
-    const rects = reserveUpdate.selectAll('rect.v-reserve')
+    const rects = reserveUpdate.selectAll<SVGRectElement, Rect[]>('rect.v-reserve')
       .data<Rect>((d: Flow, i: number) => {
         const widths = reserves[i].map((r) => r * multiplier);
         const xs = [0, ...(nt.cumsum(widths.slice(0, -1)))];
@@ -153,18 +153,18 @@ export default class FlowPainter implements Painter<Flow[], FlowPainterParams> {
           };
         });
       });
-    
+
     // RECT ENTER
     const rectsEnter = rects.enter()
       .append('rect').attr('class', 'v-reserve')
       .attr('width', d => d.width);
-      
+
     // RECT UPDATE
     const rectsUpdate = rectsEnter.merge(rects)
       .style('fill', (d, i) => color(i));
     rectsUpdate.transition().duration(duration)
       .attr('width', d => d.width).attr('height', d => d.height).attr('x', d => d.x);
-    
+
     // RECT EXIT
     rects.exit().remove();
     // *RECTS END*
@@ -180,7 +180,7 @@ export default class FlowPainter implements Painter<Flow[], FlowPainterParams> {
     const multiplier = width / reserveSums[0];
 
     // JOIN
-    const flow = root.selectAll('g.v-flows').data(flows);
+    const flow = root.selectAll<SVGGElement, Flow[]>('g.v-flows').data(flows);
 
     // ENTER
     const flowEnter = flow.enter().append('g').attr('class', 'v-flows');
@@ -198,10 +198,10 @@ export default class FlowPainter implements Painter<Flow[], FlowPainterParams> {
       .classed('hidden', true).classed('visible', false)
       .transition().duration(duration)
       .attr('transform', d => `translate(0,${(d.y - dy - 60) || 0})`);
-    
+
     // *PATHS START*
     // JOIN PATH DATA
-    const paths = flowUpdate.selectAll('path')
+    const paths = flowUpdate.selectAll<SVGPathElement, Path[]>('path')
       .data<Path>((d: Flow, i: number) => {
         let x0 = ((i === reserves.length - 1) ? 0 : reserveSums[i + 1]) * multiplier;
         let y1 = flowSums[i] * multiplier / 2;
@@ -214,20 +214,20 @@ export default class FlowPainter implements Painter<Flow[], FlowPainterParams> {
           return {s, t, width: pathWidth};
         });
       });
-    
+
     // PATH ENTER
     const pathsEnter = paths.enter()
       .append('path')
       .attr('d', flowCurve())
       .style('stroke-width', 1e-6);
-      
+
     // PATH UPDATE
     const pathsUpdate = pathsEnter.merge(paths)
       .style('stroke', (d, i) => color(i));
     pathsUpdate.transition().duration(duration)
       .attr('d', flowCurve)
       .style('stroke-width', d => `${d.width}px`);
-    
+
     // PATH EXIT
     paths.exit().transition().duration(duration)
       .attr('d', flowCurve()).style('stroke-width', 1e-6)

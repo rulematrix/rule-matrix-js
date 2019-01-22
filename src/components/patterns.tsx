@@ -10,7 +10,7 @@ export interface PatternsProps {
 }
 
 /**
- * The filling patterns used in the visualization. 
+ * The filling patterns used in the visualization.
  * This will render a def tag, which should be in the beginning inside of the svg.
  * @export
  * @param {PatternsProps} props
@@ -24,16 +24,16 @@ export default function Patterns (props: PatternsProps) {
       {labels.map((label, i) => {
         const iColor = color(i);
         const name = `stripe-${iColor.slice(1)}`;
-        return (<pattern 
-          key={name} 
-          id={name} 
-          width={patternPadding} 
+        return (<pattern
+          key={name}
+          id={name}
+          width={patternPadding}
           height={patternPadding}
           patternUnits="userSpaceOnUse"
           patternTransform="rotate(-45)"
         >
-          <path 
-            d={`M 0 ${patternPadding / 2} H ${patternPadding}`} 
+          <path
+            d={`M 0 ${patternPadding / 2} H ${patternPadding}`}
             style={{strokeLinecap: 'square', strokeWidth: `${patternStrokeWidth}px`, stroke: iColor}}
           />
         </pattern>);

@@ -6,7 +6,7 @@ import RuleMatrix, { RuleMatrixPropsOptional } from './components/RuleMatrix';
 import { RuleList, ConditionalStreams, Streams, Support, SupportMat } from './models';
 
 // import * as fs from 'fs';
-import Patterns from './components/Patterns';
+import Patterns from './components/patterns';
 import Legend from './components/Legend';
 import Widgets from './components/Widgets';
 
@@ -58,7 +58,7 @@ export default class RuleMatrixApp extends React.Component<AppProps, AppState> {
     const rmStyles = {...styles, minSupport, minFidelity};
     return (
       <div>
-        {widgets && 
+        {widgets &&
           <Widgets onMinSupportChange={this.onMinSupportChange} onMinFidelityChange={this.onMinFidelityChange}/>
         }
         <svg id={id || 'main'} height={height} width={width}>
@@ -66,13 +66,13 @@ export default class RuleMatrixApp extends React.Component<AppProps, AppState> {
             <Patterns labels={model.meta.labelNames} color={styles && styles.color}/>
           }
           {
-            model && streams && support && 
-            <RuleMatrix 
-              model={model} 
-              streams={streams} 
+            model && streams && support &&
+            <RuleMatrix
+              model={model}
+              streams={streams}
               support={support}
               input={input}
-              {...rmStyles} 
+              {...rmStyles}
             />
           }
           {model &&

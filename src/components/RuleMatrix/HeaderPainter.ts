@@ -42,7 +42,7 @@ export default class HeaderPainter implements Painter<Feature[], HeaderParams> {
     const maxCount = d3.max(this.features, (f: Feature) => f.count);
     const multiplier = maxHeight / (maxCount || 5);
     /* TEXT GROUP */
-    const textG = selector.selectAll('g.header').data(this.features);
+    const textG = selector.selectAll<SVGGElement, Feature[]>('g.header').data(this.features);
 
     // ENTER
     const textGEnter = textG.enter().append('g').attr('class', 'header')
@@ -63,7 +63,7 @@ export default class HeaderPainter implements Painter<Feature[], HeaderParams> {
 
     // TRANSITION
     const updateTransition = textGUpdate.transition().duration(duration)
-      .attr('transform', (d) => 
+      .attr('transform', (d) =>
         `translate(${d.x + d.width / 2},${d.expanded ? -40 : -10}) rotate(${rotate})`
       );
     // Text transition
@@ -73,14 +73,14 @@ export default class HeaderPainter implements Painter<Feature[], HeaderParams> {
     updateTransition.select('rect.header-bg')
       .attr('height', headerSize * 1.3).attr('width', d => d.count * multiplier)
       .attr('y', -headerSize);
-  
+
     // EXIT
     textG.exit().transition().duration(duration)
       .attr('transform', `translate(0,-10) rotate(${rotate})`).remove();
 
     /*AXIS*/
     const expandedFeatures = this.features.filter((f) => f.expanded);
-    const axis = selector.selectAll('g.header-axis').data(expandedFeatures);
+    const axis = selector.selectAll<SVGGElement, Feature[]>('g.header-axis').data(expandedFeatures);
     // Enter + Merge
     const axisUpdate = axis.enter()
       .append('g').attr('class', 'header-axis')
@@ -105,7 +105,7 @@ export default class HeaderPainter implements Painter<Feature[], HeaderParams> {
             .attr('dx', '.4em')
             .attr('dy', '.5em')
             .attr('transform', 'rotate(-50)');
-      } 
+      }
     });
 
     axis.exit().remove();

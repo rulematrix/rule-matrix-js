@@ -104,12 +104,12 @@ export class SupportPainter implements Painter<SupportData, SupportParams> {
     support: number[]
   ): this {
     const {duration, height, widthFactor, color} = this.params;
-    
+
     const xs = [0, ...(nt.cumsum(support))];
 
     // Render
     // Join
-    const rects = selector.selectAll('rect.mo-support').data(support);
+    const rects = selector.selectAll<SVGRectElement, number[][]>('rect.mo-support').data(support);
     // Enter
     const rectsEnter = rects.enter().append('rect').attr('class', 'mo-support')
       .attr('height', height);
@@ -140,13 +140,13 @@ export class SupportPainter implements Painter<SupportData, SupportParams> {
     const total = nt.sum(predictions);
     const falsePredictions = nt.minus(predictions, truePredictions);
     const width = total * widthFactor;
-  
+
     const widths = predictions.map((l) => l * widthFactor);
     const xs = [0, ...(nt.cumsum(widths))];
     // const ys = support.map((s, i) => s[i] / trueLabels[i] * height);
     // const heights = ys.map((y) => height - y);
 
-    const acc = selector.selectAll('text.mo-acc')
+    const acc = selector.selectAll<SVGTextElement, number[]>('text.mo-acc')
       .data(total ? [nt.sum(truePredictions) / (total + 1e-6)] : []);
     const accUpdate = acc.enter().append('text')
       .attr('class', 'mo-acc')
@@ -187,7 +187,7 @@ export class SupportPainter implements Painter<SupportData, SupportParams> {
 
     // Register the stripes
     const stripeNames = getPatternIds(color, d3.range(support.length));
-    
+
     // Render the misclassified part using stripes
     const root = selector.selectAll<SVGGElement, number[]>('g.mo-support-mat')
       .data(trueData);
@@ -207,7 +207,7 @@ export class SupportPainter implements Painter<SupportData, SupportParams> {
     exitTransition.selectAll('rect.mo-support-mat').attr('width', 1e-6).attr('x', 1e-6);
 
     // stripe rects
-    const rects = rootUpdate.selectAll('rect.mo-support-mat')
+    const rects = rootUpdate.selectAll<SVGRectElement, number[]>('rect.mo-support-mat')
     .data((d) => {
       // const xs = [0, ...(nt.cumsum(d))];
       const base = nt.sum(d.data);
@@ -232,7 +232,7 @@ export class SupportPainter implements Painter<SupportData, SupportParams> {
     stripeUpdate.transition().duration(duration)
       .attr('height', d => height)
       .attr('width', d => d.width).attr('x', d => d.x);
-    
+
     rects.exit().transition().duration(duration)
       .attr('width', 1e-6).attr('x', 1e-6).remove();
 
@@ -257,7 +257,7 @@ export class SupportPainter implements Painter<SupportData, SupportParams> {
       .map((s, i) => ({width: widths[i], x: xs[i], height: ys[i], data: s, label: i}))
       .filter(v => v.width > 0);
     // Join
-    const rects = selector.selectAll('rect.mo-support-true')
+    const rects = selector.selectAll<SVGRectElement, number[][]>('rect.mo-support-true')
       .data(trueData);
     // Enter
     const rectsEnter = rects.enter().append('rect').attr('class', 'mo-support-true')
@@ -277,9 +277,9 @@ export class SupportPainter implements Painter<SupportData, SupportParams> {
 
     // Register the stripes
     const stripeNames = getPatternIds(color, d3.range(trueLabels.length));
-    
+
     // Render the misclassified part using stripes
-    const root = selector.selectAll<SVGGElement, number[]>('g.mo-support-mat')
+    const root = selector.selectAll<SVGGElement, number[][]>('g.mo-support-mat')
       .data(trueData);
     // enter
     const rootEnter = root.enter().append<SVGGElement>('g')
@@ -297,7 +297,7 @@ export class SupportPainter implements Painter<SupportData, SupportParams> {
     exitTransition.selectAll('rect.mo-support-mat').attr('width', 1e-6).attr('x', 1e-6);
 
     // stripe rects
-    const stripeRects = rootUpdate.selectAll('rect.mo-support-mat')
+    const stripeRects = rootUpdate.selectAll<SVGRectElement, Array<{ label: number }>>('rect.mo-support-mat')
     .data((d) => {
       // const xs = [0, ...(nt.cumsum(d))];
       const base = nt.sum(d.data) - d.data[d.label];
@@ -306,7 +306,7 @@ export class SupportPainter implements Painter<SupportData, SupportParams> {
       const _xs = [0, ...nt.cumsum(_widths)];
       // console.log(factor); // tslint:disable-line
       const ret = d.data.map((v, j) => ({
-        height: height - d.height, 
+        height: height - d.height,
         width: _widths[j], x: _xs[j], label: j
       }));
       return ret.filter(r => r.width > 0);
@@ -322,7 +322,7 @@ export class SupportPainter implements Painter<SupportData, SupportParams> {
     stripeUpdate.transition().duration(duration)
       .attr('height', d => d.height)
       .attr('width', d => d.width).attr('x', d => d.x);
-    
+
     stripeRects.exit().transition().duration(duration)
       .attr('width', 1e-6).attr('x', 1e-6).remove();
 
@@ -363,7 +363,7 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
     this.params = {...(OutputPainter.defaultParams)};
     this.supportPainter = new SupportPainter();
   }
-  
+
   update(params: OutputParams): this {
     this.params = {...(OutputPainter.defaultParams), ...(this.params), ...params};
     return this;
@@ -407,7 +407,7 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
     groups.exit()
       .classed('hidden', true).classed('visible', false)
       .transition().duration(duration)
-      .attr('transform', (d, i, nodes) => 
+      .attr('transform', (d, i, nodes) =>
         `translate(10,${collapseYs.get(nodes[i].id)})`);
     return this;
   }
@@ -421,7 +421,7 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
     // const confidence = nt.sum(rules.map((r) => r.totalSupport * r.output[r.label])) / totalSupport;
     root.selectAll('g.mo-headers').data(['g']).enter()
       .append('g').attr('class', 'mo-headers').attr('transform', 'translate(0,-20)');
-    
+
     let headerTexts = ['Output (Pr)', 'Evidence'];
     let headerXs = [15, 80];
     let fillRatios = [0, 0];
@@ -432,12 +432,12 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
       const fidelity = nt.sum(
         rules.map(r => r._support[r.label])
       ) / totalSupport;
-    
+
       const acc = nt.sum(
         rules.map(r => nt.isMat(r.support) ? nt.sum(r.support.map((s, i) => s[i])) : 0)
       ) / totalSupport;
 
-      headerTexts = ['Output (Pr)', `Fidelity (${(fidelity * 100).toFixed(0)}/100)`, 
+      headerTexts = ['Output (Pr)', `Fidelity (${(fidelity * 100).toFixed(0)}/100)`,
         `Evidence (Acc: ${acc.toFixed(2)})`];
       headerXs = [15, 75, 125];
       rectWidths = [80, 110, 135];
@@ -454,7 +454,7 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
 
     const headers = root.select('g.mo-headers');
 
-    const header = headers.selectAll('g.mo-header').data(headerTexts);
+    const header = headers.selectAll<SVGGElement, string[]>('g.mo-header').data(headerTexts);
     const headerEnter = header.enter().append('g').attr('class', 'mo-header')
       .attr('transform', (d, i) => `translate(${headerXs[i]},0) rotate(-50)`)
       .style('font-size', 14);
@@ -487,7 +487,7 @@ export default class OutputPainter implements Painter<RuleX[], OutputParams> {
     transition.select('rect.mo-header-box').attr('width', (d, i) => rectWidths[i]);
     transition.select('rect.mo-header-fill')
       .attr('width', (d, i) => fillRatios[i] * rectWidths[i]);
-    
+
     // textsEnter.merge(texts).text(d => d);
     return this;
   }
@@ -512,11 +512,11 @@ public renderOutputs(
 
     // Transition
     updateTransition.select('text.mo-output')
-      .style('fill', d => 
+      .style('fill', d =>
         color(d.label)
         // d3.interpolateRgb.gamma(2.2)('#ccc', '#000')(d.output[d.label] * 2 - 1)
         // d3.interpolateRgb.gamma(2.2)('#ddd', color(d.label))(d.output[d.label] * 2 - 1)
-      )      
+      )
       .attr('dy', d => d.height / 2 + fontSize * 0.4);
 
     // *Output Bars*
@@ -528,7 +528,7 @@ public renderOutputs(
 
     // Rects
     const rects = update.select('g.mo-outputs')
-      .selectAll('rect')
+      .selectAll<SVGRectElement, { o: number, y: number }>('rect')
       .data(d => {
         if (isRuleGroup(d)) return [];
         let y = 0;
@@ -538,14 +538,14 @@ public renderOutputs(
           return ret;
         });
       });
-    
+
     const rectsUpdate = rects.enter().append('rect')
       .merge(rects);
     rectsUpdate.attr('width', 3).style('fill', (d, i) => color(i))
       .transition().duration(duration)
       .attr('height', d => d.o * rectHeight)
       .attr('y', d => d.y);
-    
+
     rects.exit().transition().duration(duration)
       .style('fill-opacity', 1e-6).remove();
 
@@ -585,7 +585,7 @@ public renderOutputs(
     const updateGroup = update.select<SVGGElement>('g.mo-fidelity')
       .datum(d => {
         const fidelity = d.fidelity;
-        const color = fidelity !== undefined 
+        const color = fidelity !== undefined
           ? (fidelity > 0.8 ? '#52c41a' :  fidelity > 0.5 ? '#faad14' : '#f5222d') : null;
         const angle = (!isRuleGroup(d) && fidelity !== undefined) ? (Math.PI * fidelity * 2 - 1e-3) : 0;
         return {...d, color, angle};
@@ -620,7 +620,7 @@ public renderOutputs(
     // // transition
     // pathsUpdate.transition().duration(duration)
     //   .attr('d', d => arc({endAngle: Math.PI * d * 2}));
-    
+
     // paths.exit().transition().duration(duration)
     //   .style('fill-opacity', 1e-6).remove();
     return this;
@@ -649,7 +649,7 @@ public renderOutputs(
 
     // const height = supports.each
     // supports
-    supports.each(({support, height}, i, nodes) => 
+    supports.each(({support, height}, i, nodes) =>
       support && this.supportPainter
         .update({widthFactor, height: (elemHeight && elemHeight < height) ? elemHeight : height, color})
         .data(support)
