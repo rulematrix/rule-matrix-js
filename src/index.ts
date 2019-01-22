@@ -1,8 +1,11 @@
+import { default as RuleMatrix } from './components/RuleMatrix';
+import { default as RuleMatrixApp } from './RuleMatrixApp';
+import * as models from './models';
+import * as painters from './components/Painters';
 
-export * from './models';
-
-export * from './components/Painters';
-
-export {default as RuleMatrix} from './components/RuleMatrix';
-
-export {default as RuleMatrixApp} from './RuleMatrixApp';
+module.exports = {
+  RuleMatrix,
+  RuleMatrixApp,
+  ...models,
+  ...painters,
+};
