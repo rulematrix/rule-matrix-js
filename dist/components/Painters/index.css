@@ -1,0 +1,25 @@
+.feature-dist {
+  fill: none;
+  stroke-width: 2px;
+}
+
+.feature-dist-highlight {
+  stroke: #1f77b4;
+  stroke-width: 2px;
+  stroke-opacity: 0.5;
+}
+
+.feature-dist-area {
+  fill-opacity: 0.3;
+  stroke-width: 0;
+}
+
+.feature-dist-area-highlight {
+  /* fill: #1f77b4; */
+  fill-opacity: 0.6 !important;
+  stroke-width: 0;
+}
+
+/* .active {
+  fill-opacity: 0.8;
+} */

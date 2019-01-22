@@ -1,0 +1,10 @@
+.rm-labels {
+    font-family: Arial, Helvetica, sans-serif; 
+    font-size: 14px;
+}
+.rm-label rect {
+    fill-opacity: 0.8;
+}
+.rm-prediction rect {
+    fill-opacity: 0.8;
+}

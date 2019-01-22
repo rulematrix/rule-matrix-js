@@ -1,0 +1,15 @@
+export declare type Vector = Array<number> | Float32Array | Float64Array | Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array;
+export declare function isMat(a?: number[] | number[][]): a is number[][];
+export declare function muls<T extends Vector>(a: T, b: number, copy?: boolean): T;
+export declare function mul<T extends Vector>(a: T, b: T, copy?: boolean): T;
+export declare function add<T extends Vector>(a: T, b: T, copy?: boolean): T;
+export declare function minus<T extends Vector>(a: T, b: T, copy?: boolean): T;
+export declare function addMat<T extends Vector>(a: T[], b: T[], copy?: boolean): T[];
+export declare function sum<T extends Vector>(arr: T): number;
+export declare function mean<T extends Vector>(arr: T): number;
+export declare function cumsum<T extends Vector>(a: T): T;
+export declare function stack<T extends Vector>(arrs: T[]): T[];
+export declare function sumVec<T extends Vector>(arrs: T[]): T;
+export declare function sumMat<T extends Vector>(arrs: T[][]): T[];
+export declare function argMax<T extends Vector>(arr: T): number;
+export declare function argMin<T extends Vector>(arr: T): number;
