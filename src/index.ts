@@ -1,11 +1,7 @@
-const RuleMatrix = require('./components/RuleMatrix');
-const RuleMatrixApp = require('./RuleMatrixApp');
-const models = require('./models');
-const painters = require('./components/Painters');
+export * from './models';
 
-module.exports = {
-  RuleMatrix,
-  RuleMatrixApp,
-  ...models,
-  ...painters,
-};
+export * from './components/Painters';
+
+export { default as RuleMatrix } from './components/RuleMatrix';
+
+export { default as RuleMatrixApp } from './RuleMatrixApp';
