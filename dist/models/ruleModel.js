@@ -1,9 +1,11 @@
-import * as tslib_1 from "tslib";
-import * as d3 from 'd3';
-import * as nt from '../service/num';
-import { isSupportMat } from './data';
-import { nBins } from '../config';
-export function updateRuleSupport(r, support) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
+var d3 = require("d3");
+var nt = require("../service/num");
+var data_1 = require("./data");
+var config_1 = require("../config");
+function updateRuleSupport(r, support) {
     if (support) {
         if (nt.isMat(support)) {
             r.support = support;
@@ -22,12 +24,15 @@ export function updateRuleSupport(r, support) {
         r.support = r._support = r.totalSupport = r.fidelity = undefined;
     }
 }
-export function isRuleGroup(rule) {
+exports.updateRuleSupport = updateRuleSupport;
+function isRuleGroup(rule) {
     return rule.rules !== undefined;
 }
-export function isRuleModel(model) {
+exports.isRuleGroup = isRuleGroup;
+function isRuleModel(model) {
     return model.type === 'rule';
 }
+exports.isRuleModel = isRuleModel;
 function toString(n, precision) {
     if (precision === void 0) { precision = 1; }
     var bit = Math.floor(Math.log10(n));
@@ -75,7 +80,7 @@ var RuleList = /** @class */ (function () {
         if (newSupport.length !== this.rules.length) {
             throw "Shape not match! newSupport has length " + newSupport.length + ", but " + this.rules.length + " is expected";
         }
-        if (isSupportMat(newSupport)) {
+        if (data_1.isSupportMat(newSupport)) {
             this.supportMats = newSupport;
             this.rules.forEach(function (r, i) { return (r.support = newSupport[i]); });
             this.useSupportMat = true;
@@ -189,9 +194,9 @@ var RuleList = /** @class */ (function () {
         var range = this.meta.ranges[f];
         var i0 = interval[0] || range[0];
         var i1 = interval[1] || range[1];
-        var step = (range[1] - range[0]) / nBins;
+        var step = (range[1] - range[0]) / config_1.nBins;
         return [(i0 - range[0]) / step, (i1 - range[0]) / step];
     };
     return RuleList;
 }());
-export { RuleList };
+exports.RuleList = RuleList;

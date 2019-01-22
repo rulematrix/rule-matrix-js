@@ -1,8 +1,10 @@
-import * as tslib_1 from "tslib";
-import * as d3 from 'd3';
-import { defaultColor, defaultDuration } from './Painter';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
+var d3 = require("d3");
+var Painter_1 = require("./Painter");
 // import * as nt from '../../service/num';
-import './HistPainter.css';
+require("./HistPainter.css");
 var StreamPainter = /** @class */ (function () {
     function StreamPainter() {
         this.params = tslib_1.__assign({}, (StreamPainter.defaultParams));
@@ -77,8 +79,8 @@ var StreamPainter = /** @class */ (function () {
         return this;
     };
     StreamPainter.defaultParams = {
-        color: defaultColor,
-        duration: defaultDuration,
+        color: Painter_1.defaultColor,
+        duration: Painter_1.defaultDuration,
         // mode: 'overlay',
         // padding: 4,
         margin: { top: 5, bottom: 5, left: 5, right: 5 },
@@ -87,4 +89,4 @@ var StreamPainter = /** @class */ (function () {
     };
     return StreamPainter;
 }());
-export default StreamPainter;
+exports.default = StreamPainter;

@@ -1,7 +1,9 @@
-import * as tslib_1 from "tslib";
-import * as nt from '../../service/num';
-import { labelColor, defaultDuration } from '../Painters';
-import './FlowPainter.css';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
+var nt = require("../../service/num");
+var Painters_1 = require("../Painters");
+require("./FlowPainter.css");
 var originPoint = { x: 0, y: 0 };
 var curve = function (s, t) {
     if (s === void 0) { s = originPoint; }
@@ -173,12 +175,12 @@ var FlowPainter = /** @class */ (function () {
     FlowPainter.defaultParams = {
         width: 100,
         height: 50,
-        duration: defaultDuration,
+        duration: Painters_1.defaultDuration,
         dy: -30,
         dx: -40,
-        color: labelColor,
+        color: Painters_1.labelColor,
         divideHeight: 8,
     };
     return FlowPainter;
 }());
-export default FlowPainter;
+exports.default = FlowPainter;

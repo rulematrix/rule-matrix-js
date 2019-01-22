@@ -1,8 +1,10 @@
-import * as tslib_1 from "tslib";
-import * as React from 'react';
-import * as d3 from 'd3';
-import { labelColor } from './Painters';
-import './Legend.css';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
+var React = require("react");
+var d3 = require("d3");
+var Painters_1 = require("./Painters");
+require("./Legend.css");
 var Legend = /** @class */ (function (_super) {
     tslib_1.__extends(Legend, _super);
     function Legend(props) {
@@ -75,10 +77,10 @@ var Legend = /** @class */ (function (_super) {
     Legend.defaultProps = {
         labelSize: 12,
         fontSize: 14,
-        color: labelColor,
+        color: Painters_1.labelColor,
         duration: 400,
         transform: '',
     };
     return Legend;
 }(React.PureComponent));
-export default Legend;
+exports.default = Legend;

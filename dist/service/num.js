@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // export type DType = 'int8' | 'int16' | 'int32' | 'uint8' | 'uint16' | 'uint32' | 'float32' | 'float64';
 // export interface Array2D<T extends Vector> {
 //   size: number;
@@ -17,19 +19,21 @@
 //     this.data[i * this.shape[0] + j] = v;
 //   }
 // }
-export function isMat(a) {
+function isMat(a) {
     if (a && a.length)
         return Array.isArray(a[0]);
     return false;
 }
-export function muls(a, b, copy) {
+exports.isMat = isMat;
+function muls(a, b, copy) {
     if (copy === void 0) { copy = true; }
     var ret = copy ? a.slice() : a;
     for (var i = 0; i < ret.length; ++i)
         ret[i] *= b;
     return ret;
 }
-export function mul(a, b, copy) {
+exports.muls = muls;
+function mul(a, b, copy) {
     if (copy === void 0) { copy = true; }
     if (a.length !== b.length) {
         throw 'Length of a and b must be equal!';
@@ -39,7 +43,8 @@ export function mul(a, b, copy) {
         ret[i] *= b[i];
     return ret;
 }
-export function add(a, b, copy) {
+exports.mul = mul;
+function add(a, b, copy) {
     if (copy === void 0) { copy = true; }
     if (a.length !== b.length) {
         throw 'Length of a and b must be equal!';
@@ -49,7 +54,8 @@ export function add(a, b, copy) {
         ret[i] += b[i];
     return ret;
 }
-export function minus(a, b, copy) {
+exports.add = add;
+function minus(a, b, copy) {
     if (copy === void 0) { copy = true; }
     if (a.length !== b.length) {
         throw 'Length of a and b must be equal!';
@@ -59,7 +65,8 @@ export function minus(a, b, copy) {
         ret[i] -= b[i];
     return ret;
 }
-export function addMat(a, b, copy) {
+exports.minus = minus;
+function addMat(a, b, copy) {
     if (copy === void 0) { copy = true; }
     if (a.length !== b.length) {
         throw 'Length of a and b must be equal!';
@@ -69,17 +76,20 @@ export function addMat(a, b, copy) {
         add(ret[i], b[i], false);
     return ret;
 }
-export function sum(arr) {
+exports.addMat = addMat;
+function sum(arr) {
     var _sum = 0;
     for (var i = 0; i < arr.length; ++i) {
         _sum += arr[i];
     }
     return _sum;
 }
-export function mean(arr) {
+exports.sum = sum;
+function mean(arr) {
     return sum(arr) / arr.length;
 }
-export function cumsum(a) {
+exports.mean = mean;
+function cumsum(a) {
     // if (a instanceof nj.NdArray)
     var arr = a.slice();
     for (var i = 1; i < arr.length; ++i) {
@@ -87,14 +97,16 @@ export function cumsum(a) {
     }
     return arr;
 }
-export function stack(arrs) {
+exports.cumsum = cumsum;
+function stack(arrs) {
     var ret = arrs.map(function (arr) { return arr.slice(); });
     for (var i = 1; i < ret.length; i++) {
         add(ret[i], ret[i - 1], false);
     }
     return ret;
 }
-export function sumVec(arrs) {
+exports.stack = stack;
+function sumVec(arrs) {
     // if (arrs.length === 0) return ;
     var _sum = arrs[0].slice();
     for (var i = 1; i < arrs.length; ++i) {
@@ -102,14 +114,16 @@ export function sumVec(arrs) {
     }
     return _sum;
 }
-export function sumMat(arrs) {
+exports.sumVec = sumVec;
+function sumMat(arrs) {
     var _sum = arrs[0].map(function (arr) { return arr.slice(); });
     for (var i = 1; i < arrs.length; ++i) {
         addMat(_sum, arrs[i], false);
     }
     return _sum;
 }
-export function argMax(arr) {
+exports.sumMat = sumMat;
+function argMax(arr) {
     if (arr.length === 0)
         return -1;
     var maxIdx = 0;
@@ -119,7 +133,8 @@ export function argMax(arr) {
     }
     return maxIdx;
 }
-export function argMin(arr) {
+exports.argMax = argMax;
+function argMin(arr) {
     if (arr.length === 0)
         return -1;
     var minIdx = 0;
@@ -129,6 +144,7 @@ export function argMin(arr) {
     }
     return minIdx;
 }
+exports.argMin = argMin;
 // export function 
 // export function sum<T = number>(a: nj.NdArrayLike<T>, axis?: number): nj.NdArray<T> {
 //   // if (axis === undefined) return _sum(a);

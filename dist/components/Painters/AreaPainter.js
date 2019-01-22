@@ -1,7 +1,9 @@
-import * as tslib_1 from "tslib";
-import * as d3 from 'd3';
-import { defaultColor } from './Painter';
-import './index.css';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
+var d3 = require("d3");
+var Painter_1 = require("./Painter");
+require("./index.css");
 var AreaPainter = /** @class */ (function () {
     function AreaPainter() {
         this.params = tslib_1.__assign({}, (AreaPainter.defaultParams));
@@ -98,9 +100,9 @@ var AreaPainter = /** @class */ (function () {
     AreaPainter.defaultParams = {
         width: 100,
         height: 50,
-        color: defaultColor,
+        color: Painter_1.defaultColor,
         hasAxis: false,
     };
     return AreaPainter;
 }());
-export { AreaPainter };
+exports.AreaPainter = AreaPainter;

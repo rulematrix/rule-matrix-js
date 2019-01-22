@@ -1,10 +1,12 @@
+"use strict";
 // export function max
-import * as tslib_1 from "tslib";
-import { isRuleModel, } from '../models';
-export function countFeatureFreq(model, nFeatures) {
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
+var models_1 = require("../models");
+function countFeatureFreq(model, nFeatures) {
     var counts = new Array(nFeatures);
     counts.fill(0);
-    if (isRuleModel(model)) {
+    if (models_1.isRuleModel(model)) {
         model.rules.forEach(function (rule) {
             rule.conditions.forEach(function (c) {
                 counts[c.feature]++;
@@ -13,9 +15,10 @@ export function countFeatureFreq(model, nFeatures) {
     }
     return counts;
 }
+exports.countFeatureFreq = countFeatureFreq;
 var MAX_STR_LEN = 16;
 var CUT_SIZE = (MAX_STR_LEN - 2) / 2;
-export function condition2String(featureName, category) {
+function condition2String(featureName, category) {
     var abrString = featureName.length > MAX_STR_LEN
         ? "\"" + featureName.substr(0, CUT_SIZE) + "\u2026" + featureName.substr(-CUT_SIZE, CUT_SIZE) + "\""
         : featureName;
@@ -39,8 +42,9 @@ export function condition2String(featureName, category) {
         title: featureMap(featureName)
     };
 }
+exports.condition2String = condition2String;
 // export function memorize<T>()
-export function memorizePromise(f) {
+function memorizePromise(f) {
     var cache = {};
     return function () {
         var a = [];
@@ -57,3 +61,4 @@ export function memorizePromise(f) {
             });
     };
 }
+exports.memorizePromise = memorizePromise;

@@ -1,15 +1,17 @@
-import * as tslib_1 from "tslib";
-import * as d3 from 'd3';
-import { labelColor as defaultLabelColor } from '../Painters';
-import { defaultDuration, HistPainter } from '../Painters';
-import * as nt from '../../service/num';
-import StreamPainter from '../Painters/StreamPainter';
-import { isRuleGroup } from '../../models/ruleModel';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
+var d3 = require("d3");
+var Painters_1 = require("../Painters");
+var Painters_2 = require("../Painters");
+var nt = require("../../service/num");
+var StreamPainter_1 = require("../Painters/StreamPainter");
+var ruleModel_1 = require("../../models/ruleModel");
 // type ConditionData = (d: any, i: number ) => ConditionX;
 var ConditionPainter = /** @class */ (function () {
     function ConditionPainter() {
-        this.histPainter = new HistPainter();
-        this.streamPainter = new StreamPainter();
+        this.histPainter = new Painters_2.HistPainter();
+        this.streamPainter = new StreamPainter_1.default();
     }
     ConditionPainter.prototype.update = function (params) {
         this.params = tslib_1.__assign({}, (this.params), params);
@@ -95,7 +97,7 @@ var ConditionPainter = /** @class */ (function () {
     };
     return ConditionPainter;
 }());
-export { ConditionPainter };
+exports.ConditionPainter = ConditionPainter;
 var RuleRowPainter = /** @class */ (function () {
     // private rule: RuleX;
     function RuleRowPainter() {
@@ -125,7 +127,7 @@ var RuleRowPainter = /** @class */ (function () {
         /* CONDITIONS */
         // JOIN
         var conditions = selector.selectAll('g.matrix-condition')
-            .data(isRuleGroup(rule) ? [] : rule.conditions);
+            .data(ruleModel_1.isRuleGroup(rule) ? [] : rule.conditions);
         // ENTER
         var conditionsEnter = conditions.enter()
             .append('g').attr('class', 'matrix-condition')
@@ -206,7 +208,7 @@ var RuleRowPainter = /** @class */ (function () {
         var buttonRoot = selector.select('g.row-button');
         var collapseButton = buttonRoot.select('g.collapse-button');
         var ruleButton = buttonRoot.select('g.rule-button');
-        if (!isRuleGroup(rule) && !rule.expanded) {
+        if (!ruleModel_1.isRuleGroup(rule) && !rule.expanded) {
             collapseButton.attr('display', 'none').on('click', null);
             ruleButton.attr('display', null);
             ruleButton.select('text.rule-no').attr('dy', rule.height / 2 + 6).text(rule.idx + 1);
@@ -223,10 +225,10 @@ var RuleRowPainter = /** @class */ (function () {
                 .attr('transform', "translate(" + (rule.expanded ? -20 : 4) + "," + rule.height / 2 + ")");
             collapseButton.select('rect.button-bg').attr('width', 20);
             var rects = collapseButton.selectAll('rect.row-button')
-                .data(isRuleGroup(rule) ? rule.rules : []);
+                .data(ruleModel_1.isRuleGroup(rule) ? rule.rules : []);
             rects.exit().transition().duration(duration)
                 .attr('fill-opacity', 1e-6).remove();
-            if (isRuleGroup(rule)) {
+            if (ruleModel_1.isRuleGroup(rule)) {
                 // const nNested = rule.rules.length;
                 var height = 4;
                 var width = 4;
@@ -253,11 +255,11 @@ var RuleRowPainter = /** @class */ (function () {
         }
     };
     RuleRowPainter.defaultParams = {
-        labelColor: defaultLabelColor,
-        duration: defaultDuration,
+        labelColor: Painters_1.labelColor,
+        duration: Painters_2.defaultDuration,
         buttonSize: 10,
         onClickButton: function () { return null; },
     };
     return RuleRowPainter;
 }());
-export default RuleRowPainter;
+exports.default = RuleRowPainter;

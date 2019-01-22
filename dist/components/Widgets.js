@@ -1,9 +1,11 @@
-import * as tslib_1 from "tslib";
-import * as React from 'react';
-import Slider, { createSliderWithTooltip } from 'rc-slider';
-import 'rc-slider/assets/index.css';
-import './Widgets.css';
-var SliderWithTooltip = createSliderWithTooltip(Slider);
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
+var React = require("react");
+var rc_slider_1 = require("rc-slider");
+require("rc-slider/assets/index.css");
+require("./Widgets.css");
+var SliderWithTooltip = rc_slider_1.createSliderWithTooltip(rc_slider_1.default);
 var FloatSlider = /** @class */ (function (_super) {
     tslib_1.__extends(FloatSlider, _super);
     function FloatSlider(props) {
@@ -48,7 +50,7 @@ var FloatSlider = /** @class */ (function (_super) {
     };
     return FloatSlider;
 }(React.Component));
-export { FloatSlider };
+exports.FloatSlider = FloatSlider;
 var Widgets = /** @class */ (function (_super) {
     tslib_1.__extends(Widgets, _super);
     function Widgets(props) {
@@ -76,4 +78,4 @@ var Widgets = /** @class */ (function (_super) {
     };
     return Widgets;
 }(React.Component));
-export default Widgets;
+exports.default = Widgets;

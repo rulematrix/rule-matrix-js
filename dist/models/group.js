@@ -1,6 +1,8 @@
-import * as tslib_1 from "tslib";
-import { isRuleGroup } from './ruleModel';
-import * as nt from '../service/num';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
+var ruleModel_1 = require("./ruleModel");
+var nt = require("../service/num");
 /**
  * A function that group an array of rules to a single RuleGroup.
  * The input rules can contain RuleGroup, which will be handled properly.
@@ -8,7 +10,7 @@ import * as nt from '../service/num';
  * @param {Rule[]} rules
  * @returns {(Rule | RuleGroup)}
  */
-export function groupRules(rules) {
+function groupRules(rules) {
     if (rules.length === 0)
         throw 'The length of the rules to be grouped should be at least 1';
     if (rules.length === 1) {
@@ -19,7 +21,7 @@ export function groupRules(rules) {
     var nested = [];
     for (var i = 0; i < rules.length; i++) {
         var rule = rules[i];
-        if (isRuleGroup(rule)) {
+        if (ruleModel_1.isRuleGroup(rule)) {
             nested = nested.concat(rule.rules);
         }
         else {
@@ -60,6 +62,7 @@ export function groupRules(rules) {
     rules.forEach(function (r) { return r.parent = ret; });
     return ret;
 }
+exports.groupRules = groupRules;
 /**
  * Filter unsatisfied rules.
  * The filter function will be called for each rule.
@@ -71,7 +74,7 @@ export function groupRules(rules) {
  * @param {(rule: Rule, i?: number, rules?: Rule[]) => boolean} filter
  * @returns {Rule[]}
  */
-export function groupRulesBy(rules, filter) {
+function groupRulesBy(rules, filter) {
     var retRules = new Array();
     // let prevSum = 0.;
     var tmpRules = [];
@@ -95,7 +98,8 @@ export function groupRulesBy(rules, filter) {
     }
     return retRules;
 }
-export function groupBySupport(rules, minSupport) {
+exports.groupRulesBy = groupRulesBy;
+function groupBySupport(rules, minSupport) {
     // const retRules: Rule[] = new Array();
     if (minSupport === void 0) { minSupport = 0.01; }
     // // let prevSum = 0.;
@@ -120,4 +124,5 @@ export function groupBySupport(rules, minSupport) {
     // return retRules;
     return groupRulesBy(rules, function (rule) { return rule.totalSupport === undefined ? true : rule.totalSupport >= minSupport; });
 }
+exports.groupBySupport = groupBySupport;
 // export function groupBy

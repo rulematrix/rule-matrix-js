@@ -1,4 +1,7 @@
+"use strict";
 // import { nBins } from '../config';
-export function isSurrogate(model) {
+Object.defineProperty(exports, "__esModule", { value: true });
+function isSurrogate(model) {
     return model.target !== undefined;
 }
+exports.isSurrogate = isSurrogate;

@@ -1,8 +1,10 @@
-import * as tslib_1 from "tslib";
-import * as d3 from 'd3';
-import { labelColor, defaultDuration } from './Painter';
-import * as nt from '../../service/num';
-import './HistPainter.css';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
+var d3 = require("d3");
+var Painter_1 = require("./Painter");
+var nt = require("../../service/num");
+require("./HistPainter.css");
 function checkBins(hists) {
     var nBins = hists[0].length;
     var equalBins = true;
@@ -253,8 +255,8 @@ var HistPainter = /** @class */ (function () {
         return this;
     };
     HistPainter.defaultParams = {
-        color: labelColor,
-        duration: defaultDuration,
+        color: Painter_1.labelColor,
+        duration: Painter_1.defaultDuration,
         mode: 'overlay',
         padding: 4,
         margin: { top: 5, bottom: 5, left: 5, right: 5 },
@@ -264,4 +266,4 @@ var HistPainter = /** @class */ (function () {
     };
     return HistPainter;
 }());
-export default HistPainter;
+exports.default = HistPainter;

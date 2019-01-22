@@ -1,6 +1,8 @@
-import * as d3 from 'd3';
-import { isRuleModel } from './ruleModel';
-export function rankRuleFeatures(rules, nFeatures) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var d3 = require("d3");
+var ruleModel_1 = require("./ruleModel");
+function rankRuleFeatures(rules, nFeatures) {
     var featureImportance = new Array(nFeatures).fill(0);
     rules.forEach(function (r) {
         r.conditions.forEach(function (c) {
@@ -11,11 +13,13 @@ export function rankRuleFeatures(rules, nFeatures) {
     features.sort(function (i, j) { return featureImportance[j] - featureImportance[i]; });
     return features;
 }
-export function rankModelFeatures(model) {
-    if (isRuleModel(model))
+exports.rankRuleFeatures = rankRuleFeatures;
+function rankModelFeatures(model) {
+    if (ruleModel_1.isRuleModel(model))
         return rankRuleFeatures(model.rules, model.nFeatures);
     else {
         console.warn('Not Implemented!');
         return d3.range(model.nFeatures);
     }
 }
+exports.rankModelFeatures = rankModelFeatures;

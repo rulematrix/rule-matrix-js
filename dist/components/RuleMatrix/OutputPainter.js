@@ -1,9 +1,11 @@
-import * as tslib_1 from "tslib";
-import * as d3 from 'd3';
-import * as nt from '../../service/num';
-import { labelColor, defaultDuration } from '../Painters';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
+var d3 = require("d3");
+var nt = require("../../service/num");
+var Painters_1 = require("../Painters");
 // import { registerStripePattern } from '../../service/utils';
-import { isRuleGroup } from '../../models/ruleModel';
+var ruleModel_1 = require("../../models/ruleModel");
 // Returns a tween for a transition’s "d" attribute, transitioning any selected
 // arcs from their current angle to the specified new angle.
 function arcTween(startAngle, newAngle, arc) {
@@ -267,12 +269,12 @@ var SupportPainter = /** @class */ (function () {
         return this;
     };
     SupportPainter.defaultParams = {
-        color: labelColor,
-        duration: defaultDuration,
+        color: Painters_1.labelColor,
+        duration: Painters_1.defaultDuration,
     };
     return SupportPainter;
 }());
-export { SupportPainter };
+exports.SupportPainter = SupportPainter;
 var OutputPainter = /** @class */ (function () {
     function OutputPainter() {
         this.params = tslib_1.__assign({}, (OutputPainter.defaultParams));
@@ -293,7 +295,7 @@ var OutputPainter = /** @class */ (function () {
         // console.log('useMat', rules[0].support); // tslint:disable-line
         // console.log('useMat', this.useMat); // tslint:disable-line
         var collapseYs = new Map();
-        rules.forEach(function (r) { return isRuleGroup(r) && r.rules.forEach(function (_r) { return collapseYs.set("o-" + _r.idx, r.y); }); });
+        rules.forEach(function (r) { return ruleModel_1.isRuleGroup(r) && r.rules.forEach(function (_r) { return collapseYs.set("o-" + _r.idx, r.y); }); });
         this.renderHeader(selector);
         // ROOT Group
         var groups = selector.selectAll('g.matrix-outputs')
@@ -394,9 +396,9 @@ var OutputPainter = /** @class */ (function () {
         enter.append('text').attr('class', 'mo-output').attr('text-anchor', 'middle').attr('dx', 15);
         // Update
         update.select('text.mo-output')
-            .attr('font-size', function (d) { return isRuleGroup(d) ? fontSize * 0.8 : fontSize; })
+            .attr('font-size', function (d) { return ruleModel_1.isRuleGroup(d) ? fontSize * 0.8 : fontSize; })
             .text(function (d) {
-            return isRuleGroup(d) ? '' : (Math.round(d.output[d.label] * 100) / 100).toFixed(2);
+            return ruleModel_1.isRuleGroup(d) ? '' : (Math.round(d.output[d.label] * 100) / 100).toFixed(2);
         }); // confidence as text
         // Transition
         updateTransition.select('text.mo-output')
@@ -417,7 +419,7 @@ var OutputPainter = /** @class */ (function () {
         var rects = update.select('g.mo-outputs')
             .selectAll('rect')
             .data(function (d) {
-            if (isRuleGroup(d))
+            if (ruleModel_1.isRuleGroup(d))
                 return [];
             var y = 0;
             return d.output.map(function (o) {
@@ -465,15 +467,15 @@ var OutputPainter = /** @class */ (function () {
             var fidelity = d.fidelity;
             var color = fidelity !== undefined
                 ? (fidelity > 0.8 ? '#52c41a' : fidelity > 0.5 ? '#faad14' : '#f5222d') : null;
-            var angle = (!isRuleGroup(d) && fidelity !== undefined) ? (Math.PI * fidelity * 2 - 1e-3) : 0;
+            var angle = (!ruleModel_1.isRuleGroup(d) && fidelity !== undefined) ? (Math.PI * fidelity * 2 - 1e-3) : 0;
             return tslib_1.__assign({}, d, { color: color, angle: angle });
         });
         updateGroup.select('text.mo-fidelity')
-            .attr('font-size', function (d) { return isRuleGroup(d) ? fontSize * 0.8 : fontSize; })
+            .attr('font-size', function (d) { return ruleModel_1.isRuleGroup(d) ? fontSize * 0.8 : fontSize; })
             .attr('dy', fontSize * 0.4)
             // .attr('dx', dx)
             .text(function (d) {
-            return (!isRuleGroup(d) && d.fidelity !== undefined) ? (Math.round(d.fidelity * 100)).toFixed(0) : '';
+            return (!ruleModel_1.isRuleGroup(d) && d.fidelity !== undefined) ? (Math.round(d.fidelity * 100)).toFixed(0) : '';
         })
             .style('fill', function (d) { return d.color; });
         // Join
@@ -483,7 +485,7 @@ var OutputPainter = /** @class */ (function () {
             // update pos
             .attrTween('d', function (d) {
             var angle = Number(d3.select(this).attr('angle'));
-            return arcTween(angle, (!isRuleGroup(d) && d.fidelity) ? (Math.PI * d.fidelity * 2 - 1e-3) : 0, arc);
+            return arcTween(angle, (!ruleModel_1.isRuleGroup(d) && d.fidelity) ? (Math.PI * d.fidelity * 2 - 1e-3) : 0, arc);
         })
             // .attr('d', d => arc({endAngle: (!isRuleGroup(d) && d.fidelity) ? (Math.PI * d.fidelity * 2 - 1e-3) : 0}))
             .style('fill', function (d) { return d.color; })
@@ -531,8 +533,8 @@ var OutputPainter = /** @class */ (function () {
         return this;
     };
     OutputPainter.defaultParams = {
-        color: labelColor,
-        duration: defaultDuration,
+        color: Painters_1.labelColor,
+        duration: Painters_1.defaultDuration,
         fontSize: 14,
         widthFactor: 200,
         displayEvidence: true,
@@ -540,4 +542,4 @@ var OutputPainter = /** @class */ (function () {
     };
     return OutputPainter;
 }());
-export default OutputPainter;
+exports.default = OutputPainter;

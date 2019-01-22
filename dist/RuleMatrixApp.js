@@ -1,10 +1,12 @@
-import * as tslib_1 from "tslib";
-import * as React from 'react';
-import RuleMatrix from './components/RuleMatrix';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
+var React = require("react");
+var RuleMatrix_1 = require("./components/RuleMatrix");
 // import * as fs from 'fs';
-import Patterns from './components/patterns';
-import Legend from './components/Legend';
-import Widgets from './components/Widgets';
+var patterns_1 = require("./components/patterns");
+var Legend_1 = require("./components/Legend");
+var Widgets_1 = require("./components/Widgets");
 /**
  * RuleMatrixApp is a functional svg component that wraps RuleMatrix (which renders a group element).
  *
@@ -38,15 +40,15 @@ var RuleMatrixApp = /** @class */ (function (_super) {
         var rmStyles = tslib_1.__assign({}, styles, { minSupport: minSupport, minFidelity: minFidelity });
         return (React.createElement("div", null,
             widgets &&
-                React.createElement(Widgets, { onMinSupportChange: this.onMinSupportChange, onMinFidelityChange: this.onMinFidelityChange }),
+                React.createElement(Widgets_1.default, { onMinSupportChange: this.onMinSupportChange, onMinFidelityChange: this.onMinFidelityChange }),
             React.createElement("svg", { id: id || 'main', height: height, width: width },
                 model &&
-                    React.createElement(Patterns, { labels: model.meta.labelNames, color: styles && styles.color }),
+                    React.createElement(patterns_1.default, { labels: model.meta.labelNames, color: styles && styles.color }),
                 model && streams && support &&
-                    React.createElement(RuleMatrix, tslib_1.__assign({ model: model, streams: streams, support: support, input: input }, rmStyles)),
+                    React.createElement(RuleMatrix_1.default, tslib_1.__assign({ model: model, streams: streams, support: support, input: input }, rmStyles)),
                 model &&
-                    React.createElement(Legend, { labels: model.meta.labelNames, color: styles && styles.color, transform: "translate(150, 10)" }))));
+                    React.createElement(Legend_1.default, { labels: model.meta.labelNames, color: styles && styles.color, transform: "translate(150, 10)" }))));
     };
     return RuleMatrixApp;
 }(React.Component));
-export default RuleMatrixApp;
+exports.default = RuleMatrixApp;

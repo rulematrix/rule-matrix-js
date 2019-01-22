@@ -1,33 +1,36 @@
-import * as tslib_1 from "tslib";
-import * as d3 from 'd3';
-import { labelColor, defaultDuration } from '../Painters';
-import * as nt from '../../service/num';
-import { isRuleGroup, groupRules, rankRuleFeatures, groupRulesBy } from '../../models';
-import RowPainter from './RowPainter';
-import { isConditionalStreams } from '../../models';
-import FlowPainter from './FlowPainter';
-import OutputPainter from './OutputPainter';
-import HeaderPainter from './HeaderPainter';
-export function flattenRules(rules) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
+var d3 = require("d3");
+var Painters_1 = require("../Painters");
+var nt = require("../../service/num");
+var models_1 = require("../../models");
+var RowPainter_1 = require("./RowPainter");
+var models_2 = require("../../models");
+var FlowPainter_1 = require("./FlowPainter");
+var OutputPainter_1 = require("./OutputPainter");
+var HeaderPainter_1 = require("./HeaderPainter");
+function flattenRules(rules) {
     var ret = [];
     rules.forEach(function (r) {
         ret.push(r);
-        if (isRuleGroup(r))
+        if (models_1.isRuleGroup(r))
             ret.push.apply(ret, tslib_1.__spread((r.rules.slice(1))));
     });
     return ret;
 }
+exports.flattenRules = flattenRules;
 function computeExistingFeatures(rules, nFeatures) {
     var featureCounts = new Array(nFeatures).fill(0);
     for (var i = 0; i < rules.length - 1; ++i) {
-        if (isRuleGroup(rules[i]))
+        if (models_1.isRuleGroup(rules[i]))
             continue; // do not display the these features
         var conditions = rules[i].conditions;
         for (var j = 0; j < conditions.length; ++j) {
             featureCounts[conditions[j].feature] += 1;
         }
     }
-    var sortedIdx = rankRuleFeatures(rules, nFeatures);
+    var sortedIdx = models_1.rankRuleFeatures(rules, nFeatures);
     var features = sortedIdx.filter(function (f) { return featureCounts[f] > 0; });
     return { features: features, featureCounts: featureCounts };
 }
@@ -51,10 +54,10 @@ var RuleMatrixPainter = /** @class */ (function () {
     function RuleMatrixPainter() {
         this.expandedElements = new Set();
         this.activeFeatures = new Set();
-        this.rowPainter = new RowPainter();
-        this.flowPainter = new FlowPainter();
-        this.outputPainter = new OutputPainter();
-        this.headerPainter = new HeaderPainter();
+        this.rowPainter = new RowPainter_1.default();
+        this.flowPainter = new FlowPainter_1.default();
+        this.outputPainter = new OutputPainter_1.default();
+        this.headerPainter = new HeaderPainter_1.default();
         this.collapseAll = this.collapseAll.bind(this);
         this.clickExpand = this.clickExpand.bind(this);
         this.clickFeature = this.clickFeature.bind(this);
@@ -77,7 +80,7 @@ var RuleMatrixPainter = /** @class */ (function () {
         var rules = this.rules;
         var rule = rules[r];
         // Clicking on the button of a group to expand
-        if (isRuleGroup(rule)) {
+        if (models_1.isRuleGroup(rule)) {
             // console.log(`Expand rule group ${r}`); // tslint:disable-line
             var nested = initRuleXs(rule.rules, this.model);
             nested[0].expanded = true; // this flag is used for drawing the button
@@ -92,7 +95,7 @@ var RuleMatrixPainter = /** @class */ (function () {
                 i++;
             }
             // console.log(`Collapse rules [${r}, ${i})`); // tslint:disable-line
-            var grouped = initRuleXs([groupRules(nested)], this.model);
+            var grouped = initRuleXs([models_1.groupRules(nested)], this.model);
             this.rules = tslib_1.__spread(rules.slice(0, r), grouped, rules.slice(i));
         }
         this.render(this.selector);
@@ -130,7 +133,7 @@ var RuleMatrixPainter = /** @class */ (function () {
             var nFeatures = model.nFeatures;
             // Filter rules by grouping
             var supportSum_1 = nt.sum(rules.map(function (r) { return r.totalSupport || 0; }));
-            var groupedRules = groupRulesBy(rules, function (rule) {
+            var groupedRules = models_1.groupRulesBy(rules, function (rule) {
                 return (rule.totalSupport === undefined ? true : (rule.totalSupport >= (minSupport * supportSum_1)))
                     && (rule.fidelity === undefined ? true : rule.fidelity >= minFidelity);
             });
@@ -169,7 +172,7 @@ var RuleMatrixPainter = /** @class */ (function () {
         var padLeft = paddingLeft * elemWidth;
         var featureWidths = this.features.map(function (f) { return (expandedFeatures.has(f) ? expandWidth : elemWidth); });
         var ruleHeights = this.rules.map(function (r, i) {
-            return (expandedRules.has(i) ? expandHeight : (isRuleGroup(r) ? groupedHeight : elemHeight));
+            return (expandedRules.has(i) ? expandHeight : (models_1.isRuleGroup(r) ? groupedHeight : elemHeight));
         });
         var ys = ruleHeights.map(function (h) { return h + padY; });
         ys = tslib_1.__spread([0], (nt.cumsum(ys.slice(0, -1))));
@@ -195,8 +198,8 @@ var RuleMatrixPainter = /** @class */ (function () {
         this.rules.forEach(function (r, i) {
             r.y = ys[i];
             r.height = heights[i];
-            r.width = isRuleGroup(r) ? width - 10 : width; // isRuleGroup(r) ? (width - 10) : width;
-            r.x = isRuleGroup(r) ? 10 : 0;
+            r.width = models_1.isRuleGroup(r) ? width - 10 : width; // isRuleGroup(r) ? (width - 10) : width;
+            r.x = models_1.isRuleGroup(r) ? 10 : 0;
             r.highlight = i === lastIdx;
             // r.support = support[i];
         });
@@ -212,7 +215,7 @@ var RuleMatrixPainter = /** @class */ (function () {
                     c.value = (i <= lastIdx && input) ? input[c.feature] : undefined;
                 }
                 if (streams) {
-                    if (isConditionalStreams(streams))
+                    if (models_2.isConditionalStreams(streams))
                         c.stream = streams[i][c.feature];
                     else
                         c.stream = streams[c.feature];
@@ -277,7 +280,7 @@ var RuleMatrixPainter = /** @class */ (function () {
         var _a = this.params, duration = _a.duration, flowWidth = _a.flowWidth, color = _a.color;
         var rules = this.rules;
         var collapseYs = new Map();
-        rules.forEach(function (r) { return isRuleGroup(r) && r.rules.forEach(function (_r) { return collapseYs.set("r-" + _r.idx, r.y); }); });
+        rules.forEach(function (r) { return models_1.isRuleGroup(r) && r.rules.forEach(function (_r) { return collapseYs.set("r-" + _r.idx, r.y); }); });
         // const flatRules = flattenRules(rules);
         root.attr('transform', "translate(" + (flowWidth * 2 + 10) + ",0)");
         // Joined
@@ -466,12 +469,12 @@ var RuleMatrixPainter = /** @class */ (function () {
     RuleMatrixPainter.defaultParams = {
         minSupport: 0.01,
         minFidelity: 0.1,
-        color: labelColor,
+        color: Painters_1.labelColor,
         elemWidth: 30,
         elemHeight: 30,
         x0: 20,
         y0: 160,
-        duration: defaultDuration,
+        duration: Painters_1.defaultDuration,
         fontSize: 12,
         headerSize: 13,
         headerRotate: -50,
@@ -489,4 +492,4 @@ var RuleMatrixPainter = /** @class */ (function () {
     };
     return RuleMatrixPainter;
 }());
-export default RuleMatrixPainter;
+exports.default = RuleMatrixPainter;

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "module": "es2015",
+    "module": "commonjs",
     "target": "es5",
     "declaration": true,
     "downlevelIteration": true,
@@ -30,7 +30,8 @@
     "webpack",
     "jest",
     "src/setupTests.ts",
-    "config"
+    "config",
+    "dist"
   ]
   // "include": ["./typings/**/*"],
   // "files": [

@@ -1,17 +1,19 @@
-import * as tslib_1 from "tslib";
-import * as React from 'react';
-import * as d3 from 'd3';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
+var React = require("react");
+var d3 = require("d3");
 // import * as nt from '../../service/num';
-import './index.css';
-import { labelColor as defaultLabelColor } from '../Painters/Painter';
-import RuleMatrixPainter from './Painter';
+require("./index.css");
+var Painter_1 = require("../Painters/Painter");
+var Painter_2 = require("./Painter");
 var RuleMatrix = /** @class */ (function (_super) {
     tslib_1.__extends(RuleMatrix, _super);
     // private painter: RuleMatrixPainter;
     function RuleMatrix(props) {
         var _this = _super.call(this, props) || this;
         // this.stateUpdated = false;
-        var painter = new RuleMatrixPainter();
+        var painter = new Painter_2.default();
         _this.state = { painter: painter };
         return _this;
     }
@@ -66,7 +68,7 @@ var RuleMatrix = /** @class */ (function (_super) {
         // displayFidelity: true,
         displayEvidence: true,
         zoomable: true,
-        color: defaultLabelColor,
+        color: Painter_1.labelColor,
         minSupport: 0.02,
         minFidelity: 0.1,
         intervalY: 10,
@@ -78,4 +80,4 @@ var RuleMatrix = /** @class */ (function (_super) {
     };
     return RuleMatrix;
 }(React.PureComponent));
-export default RuleMatrix;
+exports.default = RuleMatrix;

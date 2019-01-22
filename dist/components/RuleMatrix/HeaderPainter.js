@@ -1,6 +1,8 @@
-import * as tslib_1 from "tslib";
-import * as d3 from 'd3';
-import { defaultDuration } from '../Painters';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
+var d3 = require("d3");
+var Painters_1 = require("../Painters");
 var HeaderPainter = /** @class */ (function () {
     function HeaderPainter() {
         this.params = tslib_1.__assign({}, (HeaderPainter.defaultParams));
@@ -81,7 +83,7 @@ var HeaderPainter = /** @class */ (function () {
         return this;
     };
     HeaderPainter.defaultParams = {
-        duration: defaultDuration,
+        duration: Painters_1.defaultDuration,
         rotate: -50,
         headerSize: 13,
         margin: { left: 1, right: 1 },
@@ -89,4 +91,4 @@ var HeaderPainter = /** @class */ (function () {
     };
     return HeaderPainter;
 }());
-export default HeaderPainter;
+exports.default = HeaderPainter;

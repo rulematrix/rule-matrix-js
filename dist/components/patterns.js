@@ -1,5 +1,7 @@
-import * as React from 'react';
-import { defaultColor } from './Painters/Painter';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = require("react");
+var Painter_1 = require("./Painters/Painter");
 var patternStrokeWidth = 3;
 var patternPadding = 5;
 /**
@@ -9,8 +11,8 @@ var patternPadding = 5;
  * @param {PatternsProps} props
  * @returns
  */
-export default function Patterns(props) {
-    var color = props.color || defaultColor;
+function Patterns(props) {
+    var color = props.color || Painter_1.defaultColor;
     var labels = props.labels;
     return (React.createElement("defs", null, labels.map(function (label, i) {
         var iColor = color(i);
@@ -19,3 +21,4 @@ export default function Patterns(props) {
             React.createElement("path", { d: "M 0 " + patternPadding / 2 + " H " + patternPadding, style: { strokeLinecap: 'square', strokeWidth: patternStrokeWidth + "px", stroke: iColor } })));
     })));
 }
+exports.default = Patterns;

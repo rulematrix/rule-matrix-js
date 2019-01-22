@@ -1,5 +1,7 @@
-import * as d3 from 'd3';
-import * as d3ScaleChromatic from 'd3-scale-chromatic';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var d3 = require("d3");
+var d3ScaleChromatic = require("d3-scale-chromatic");
 var gColor = [
     '#3366cc',
     '#ff9900',
@@ -22,15 +24,15 @@ var gColor = [
     '#5574a6',
     '#3b3eac'
 ];
-export var googleColor = function (n) { return gColor[n % gColor.length]; };
-export var defaultColor = d3.scaleOrdinal(d3ScaleChromatic.schemeSet1);
+exports.googleColor = function (n) { return gColor[n % gColor.length]; };
+exports.defaultColor = d3.scaleOrdinal(d3ScaleChromatic.schemeSet1);
 // export const labelColor: ColorType = d3.scaleOrdinal<number, string>(d3.schemeCategory10);
 // export const labelColor: ColorType = d3.scaleOrdinal<number, string>(d3.schemeCategory20 as string[]);
-export var labelColor = googleColor;
-export var sequentialColors = function (n) {
+exports.labelColor = exports.googleColor;
+exports.sequentialColors = function (n) {
     return (d3.scaleOrdinal(d3ScaleChromatic.schemeBlues[n]));
 };
-export var divergingColors = function (n) {
+exports.divergingColors = function (n) {
     return (d3.scaleOrdinal(d3ScaleChromatic.schemeRdBu[n]));
 };
-export var defaultDuration = 400;
+exports.defaultDuration = 400;
