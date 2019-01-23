@@ -20,3 +20,5 @@ deploy:
   provider: npm
   email: $USER_EMAL
   api_key: $NPM_KEY
+  on:
+    tags: true
