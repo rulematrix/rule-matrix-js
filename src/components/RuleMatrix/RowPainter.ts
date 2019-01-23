@@ -41,7 +41,7 @@ export class ConditionPainter implements Painter<ConditionX, ConditionPainterPar
 
     // Default BG Rect
     // const rects = selector.selectAll('rect.matrix-bg').data(c => ['data']);
-    
+
     // rects.enter().append('rect').attr('class', 'matrix-bg');
     // rects.exit().transition().duration(duration).remove();
 
@@ -61,7 +61,7 @@ export class ConditionPainter implements Painter<ConditionX, ConditionPainterPar
     //   .enter().append('g').attr('class', 'matrix-glyph');
     // selector.selectAll('g.matrix-glyph-expand').data(['g'])
     //   .enter().append('g').attr('class', 'matrix-glyph-expand');
-    
+
     selector.each((c: ConditionX, i, nodes) => {
       // const maskId = `mask-${c.ruleIdx}-${c.feature}-${c.category}`;
       const stream = c.stream;
@@ -78,7 +78,7 @@ export class ConditionPainter implements Painter<ConditionX, ConditionPainterPar
       // Groups
       const expandGlyph = root.select<SVGGElement>('g.matrix-glyph-expand');
       const glyph = root.select<SVGGElement>('g.matrix-glyph');
-      const inputValue = root.selectAll('rect.glyph-value').data(c.value ? [c.value] : []);
+      const inputValue = root.selectAll<SVGRectElement, number[]>('rect.glyph-value').data(c.value ? [c.value] : []);
       const inputValueUpdate = inputValue.enter()
         .append('rect').attr('class', 'glyph-value').attr('width', 2).attr('y', 0)
         .style('fill-opacity', 0.5)
@@ -146,7 +146,7 @@ export default class RuleRowPainter implements Painter<RuleX, RuleRowParams> {
   constructor() {
     this.conditionPainter = new ConditionPainter();
   }
-  
+
   update(params: RuleRowParams): this {
     this.params = {...(RuleRowPainter.defaultParams), ...(this.params), ...params};
     return this;
@@ -159,17 +159,17 @@ export default class RuleRowPainter implements Painter<RuleX, RuleRowParams> {
     selector: d3.Selection<SVGGElement, RuleX, GElement, any>,
   ): this {
     const { duration, labelColor, onClick, tooltip } = this.params;
-    const rule = this.rule; 
+    const rule = this.rule;
 
     // Background Rectangle
-    const bgRect = selector.selectAll('rect.matrix-bg').data([this.rule]);
+    const bgRect = selector.selectAll<SVGRectElement, number[]>('rect.matrix-bg').data([this.rule]);
     const bgRectUpdate = bgRect.enter()
       .append('rect').attr('class', 'matrix-bg').attr('width', 0).attr('height', 0)
       .merge(bgRect);
     bgRectUpdate.classed('matrix-bg-highlight', d => Boolean(d.highlight));
     bgRectUpdate.transition().duration(duration)
       .attr('width', d => d.width).attr('height', d => d.height);
-     
+
     // Button Group
     this.renderButton(selector);
 
@@ -182,7 +182,7 @@ export default class RuleRowPainter implements Painter<RuleX, RuleRowParams> {
     const conditionsEnter = conditions.enter()
       .append<SVGGElement>('g').attr('class', 'matrix-condition')
       .attr('transform', (c: ConditionX) => `translate(${c.x}, 0)`);
-    
+
     conditionsEnter.append('rect').attr('class', 'matrix-bg');
     conditionsEnter.append('g').attr('class', 'matrix-glyph');
     conditionsEnter.append('g').attr('class', 'matrix-glyph-expand');
@@ -200,10 +200,10 @@ export default class RuleRowPainter implements Painter<RuleX, RuleRowParams> {
     conditionsUpdate
       .transition().duration(duration)
       .attr('transform', (c: ConditionX) => `translate(${c.x}, 0)`);
-    
+
     this.conditionPainter.update({color: labelColor, duration})
       .render(conditionsUpdate);
-    // conditionsUpdate.each((d: ConditionX, i, nodes) => 
+    // conditionsUpdate.each((d: ConditionX, i, nodes) =>
     //   painter.data(d).render(d3.select(nodes[i]))
     // );
 
@@ -217,7 +217,7 @@ export default class RuleRowPainter implements Painter<RuleX, RuleRowParams> {
       const renderTooltip = (texts: string[]) => {
         tooltip.attr('display', null);
         // texts
-        const tspan = tooltip.select('text').selectAll('tspan').data(texts);
+        const tspan = tooltip.select('text').selectAll<SVGTSpanElement, string[]>('tspan').data(texts);
         const tspanUpdate = tspan
           .enter().append('tspan').attr('x', 5).attr('dx', '0.1em').attr('dy', '1.2em')
           .merge(tspan);
@@ -288,7 +288,7 @@ export default class RuleRowPainter implements Painter<RuleX, RuleRowParams> {
         .attr('transform', `translate(${rule.expanded ? -20 : 4},${rule.height / 2})`);
 
       collapseButton.select('rect.button-bg').attr('width', 20);
-        
+
       const rects = collapseButton.selectAll('rect.row-button')
         .data(isRuleGroup(rule) ? rule.rules : []);
       rects.exit().transition().duration(duration)
@@ -315,10 +315,10 @@ export default class RuleRowPainter implements Painter<RuleX, RuleRowParams> {
         .attr('class', 'row-button')
         .attr('stroke-width', 2).attr('stroke', '#bbb').attr('fill', 'none');
       collapseButton.select('path.row-button').transition().duration(duration)
-        .attr('d', rule.expanded 
-          ? `M 0 ${buttonSize / 4} L ${buttonSize / 2} ${-buttonSize / 4} L ${buttonSize} ${buttonSize / 4}` 
+        .attr('d', rule.expanded
+          ? `M 0 ${buttonSize / 4} L ${buttonSize / 2} ${-buttonSize / 4} L ${buttonSize} ${buttonSize / 4}`
           : `M 0 ${-buttonSize / 4} L ${buttonSize / 2} ${buttonSize / 4} L ${buttonSize} ${-buttonSize / 4}`);
     }
   }
-    
+
 }

@@ -87,7 +87,7 @@ export default class StreamPainter implements Painter<Section[], StreamParams> {
 
     const initPos = area(new Array<[number, number]>(streamData.length).fill([0, 1e-6]));
     // Join
-    const paths = selector.selectAll('path').data(stackedStream);
+    const paths = selector.selectAll<SVGPathElement, [number, number][][]>('path').data(stackedStream);
     // Enter
     const pathEnter = paths.enter().append('path')
       .attr('d', initPos as string);
@@ -109,9 +109,9 @@ export default class StreamPainter implements Painter<Section[], StreamParams> {
   ): this {
     const {interval, duration, margin, height} = this.params;
 
-    const rangeRect = selector.selectAll('rect.hp-brush')
+    const rangeRect = selector.selectAll<SVGRectElement, Section[]>('rect.hp-brush')
       .data((interval && this.stream.length) ? [interval] : []);
-    
+
     rangeRect.exit().transition().duration(duration)
       .attr('height', 1e-6).attr('y', height / 2).remove();
 

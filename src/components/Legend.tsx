@@ -33,8 +33,8 @@ export default class Legend extends React.PureComponent<LegendProps, LegendState
   update() {
     const {labels, labelSize, fontSize, color, duration} = this.props as OptionalProps & LegendProps;
     const delta = labelSize + 80;
-    const selector = d3.select(this.ref);
-    const label = selector.selectAll('g.rm-label').data(labels);
+    const selector = d3.select<SVGElement, string[]>(this.ref);
+    const label = selector.selectAll<SVGGElement, string[]>('g.rm-label').data(labels);
 
     // ENTER
     const labelEnter = label.enter().append('g').attr('class', 'rm-label');
@@ -43,7 +43,7 @@ export default class Legend extends React.PureComponent<LegendProps, LegendState
       .attr('y', -(fontSize + labelSize) / 2.2)
       .attr('width', labelSize)
       .attr('height', labelSize);
-    
+
     labelEnter.append('text').attr('text-anchor', 'start').attr('x', labelSize * 1.3).style('font-size', fontSize);
 
     const labelUpdate = labelEnter.merge(label)
@@ -51,7 +51,7 @@ export default class Legend extends React.PureComponent<LegendProps, LegendState
     labelUpdate.transition()
       .duration(duration)
       .attr('transform', (d, i) => `translate(${i * delta + 50}, ${fontSize * 1.2})`);
-    
+
     labelUpdate.select('text').text((d) => d);
 
     label.exit()
@@ -70,16 +70,16 @@ export default class Legend extends React.PureComponent<LegendProps, LegendState
       .attr('y', -(fontSize + labelSize) / 2.2)
       .attr('width', labelSize)
       .attr('height', labelSize);
-    
+
     const predictUpdate = predictEnter.merge(label)
       .attr('fill', (d, i) => `url("#stripe-${color(i).slice(1)}")`);
     predictUpdate.transition()
       .duration(duration)
-      .attr('transform', (d, i) => 
+      .attr('transform', (d, i) =>
         `translate(${i * (labelSize * 1.5) + labels.length * delta + 50}, ${fontSize * 1.2})`
       );
-    
-    const predictText = selector.selectAll('text.rm-predict')
+
+    const predictText = selector.selectAll<SVGTextElement, string[]>('text.rm-predict')
       .data(['Wrong Predictions']);
     predictText.enter()
       .append('text').merge(predictText)

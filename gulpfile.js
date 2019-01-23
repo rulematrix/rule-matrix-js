@@ -28,12 +28,12 @@ gulp.task('clean:css', () =>
     .pipe(plugins.clean())
 );
 
-gulp.task('copy:css', ['clean:css'], () => 
+gulp.task('copy:css', ['clean:css'], () =>
 	gulp.src('src/**/*.css')
 		.pipe(gulp.dest('dist'))
 );
 
-gulp.task('bundle:css', ['copy:css'], () => 
+gulp.task('bundle:css', ['copy:css'], () =>
     gulp.src('dist/**/*.css')
         .pipe(plugins.concat('rulematrix.development.css'))
 		.pipe(gulp.dest('build'))
@@ -53,7 +53,7 @@ gulp.task('build:ts', ['clean:ts'], () => {
     ]);
 });
 
-gulp.task('copy:data', () => 
+gulp.task('copy:data', () =>
 	merge([
         gulp.src('src/**/*.json')
             .pipe(gulp.dest('build')),

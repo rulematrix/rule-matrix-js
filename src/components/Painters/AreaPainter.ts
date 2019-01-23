@@ -56,12 +56,12 @@ export class AreaPainter implements Painter<Histogram[], Partial<AreaPainterPara
       .scaleLinear()
       .domain([xMin, xMax]) // input
       .range([1, width - 1]); // output
-  
+
     const yScale = d3
       .scaleLinear()
       .domain([0, Math.max(...hists.map(hist => Math.max(...hist)))]) // input
       .range([height, 0]); // output
-  
+
     const lineGenerator = d3
       .line<[number, number]>()
       .x((d: number[]): number => xScale(d[0]))
@@ -76,39 +76,39 @@ export class AreaPainter implements Painter<Histogram[], Partial<AreaPainterPara
       .y0(yScale(0))
       .curve(d3.curveNatural);
     // const areaStrings = lineDataList.map(lineData => area(lineData));
-    
-    const lines = selector.selectAll('.feature-dist')
+
+    const lines = selector.selectAll<SVGPathElement, Line[]>('.feature-dist')
       .data(lineDataList);
     const enterLines = lines.enter()
       .append('path')
       .attr('class', 'feature-dist')
       .style('stroke', (d: Line, i: number) => color(i));
-    
+
     enterLines.merge(lines)
       .attr('d', lineGenerator);
-  
+
     lines.exit()
       .transition()
       .duration(300)
       .style('stroke-opacity', 1e-6)
       .remove();
-  
-    const areas = selector.selectAll('.feature-dist-area')
+
+    const areas = selector.selectAll<SVGPathElement, Line[]>('.feature-dist-area')
       .data(lineDataList);
-    
+
     const enterAreas = areas.enter()
       .append('path')
       .classed('feature-dist-area', true)
       .style('fill', (d: Line, i: number) => color(i));
     enterAreas.merge(areas)
       .attr('d', areaGenerator);
-    
+
     areas.exit()
       .transition()
       .duration(300)
       .style('fill-opacity', 1e-6)
       .remove();
-    
+
     const axis = selector.selectAll('g')
       .data(hasAxis ? ['x-axis', 'y-axis'] : []);
     axis
